@@ -20,6 +20,7 @@
       --red-dark: #a9161c;
       --red-light: #e53935;
       --gold-banner: #c59b27;
+      --gold-spinner: #d4a017;
       --pink-btn: #e59398;
       --pink-btn-hover: #da7d83;
       --bg-canvas: #f3f3f3;
@@ -61,6 +62,7 @@
       flex-direction: column;
       background-color: transparent;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.06);
+      position: relative;
     }
 
     .screen {
@@ -74,7 +76,41 @@
       display: flex;
     }
 
-    /* ================= الواجهة الأولى ================= */
+    /* ================= طبقة الدائرة الذهبية (ثانيتين) ================= */
+    .gold-loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(1px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .gold-loader-overlay.active {
+      display: flex;
+    }
+
+    .gold-spinner {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 6px solid rgba(197, 155, 39, 0.22);
+      border-top-color: var(--gold-spinner);
+      border-right-color: #f0c43c;
+      animation: spinGold 0.85s linear infinite;
+      box-shadow: 0 4px 18px rgba(197, 155, 39, 0.35);
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    @keyframes spinGold {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ================= شاشة 1: الواجهة الأولى ================= */
     .top-header-1 {
       background: linear-gradient(180deg, var(--red-light) 0%, var(--red-primary) 65%, var(--red-dark) 100%);
       padding: 16px;
@@ -293,7 +329,7 @@
       text-align: center;
     }
 
-    /* ================= الواجهة الثانية ================= */
+    /* ================= الشريط العلوي والبانر للواجهات الداخلية ================= */
     .top-bar-2 {
       background-color: var(--red-header-2);
       color: #ffffff;
@@ -368,7 +404,7 @@
     }
 
     .page-title-banner h1 {
-      font-size: 20px;
+      font-size: 19.5px;
       font-weight: 600;
       line-height: 1.55;
     }
@@ -387,12 +423,12 @@
 
     .card-heading-wrap {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .card-heading {
       display: inline-block;
-      font-size: 21px;
+      font-size: 20.5px;
       font-weight: 700;
       color: #2b2b2b;
       padding-bottom: 6px;
@@ -400,18 +436,26 @@
     }
 
     .field-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .field-label {
       display: block;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
       color: #333333;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
     }
 
-    .input-control {
+    .field-hint {
+      display: block;
+      font-size: 12px;
+      color: #666666;
+      margin-top: 5px;
+    }
+
+    .input-control,
+    .select-control {
       width: 100%;
       height: 48px;
       border: 1.2px solid var(--border-input);
@@ -430,7 +474,8 @@
       font-size: 14px;
     }
 
-    .input-control:focus {
+    .input-control:focus,
+    .select-control:focus {
       border-color: var(--red-header-2);
       box-shadow: 0 0 0 3px rgba(200, 35, 44, 0.1);
     }
@@ -526,6 +571,7 @@
       user-select: none;
     }
 
+    /* زر الدخول يتقلب إلى الأحمر تلقائياً عند اكتمال البيانات */
     .submit-btn {
       width: 100%;
       height: 50px;
@@ -537,15 +583,216 @@
       font-size: 17px;
       font-weight: 700;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.15s ease;
+      transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .submit-btn.ready-red {
+      background: linear-gradient(180deg, #e02930 0%, var(--red-primary) 60%, var(--red-dark) 100%);
+      box-shadow: var(--shadow-btn);
     }
 
     .submit-btn:hover {
-      background-color: var(--pink-btn-hover);
+      filter: brightness(1.04);
     }
 
     .submit-btn:active {
       transform: scale(0.99);
+    }
+
+    .action-btn-gold {
+      width: 100%;
+      height: 46px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #d4a82d 0%, var(--gold-banner) 100%);
+      color: #ffffff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: filter 0.15s ease, transform 0.15s ease;
+    }
+
+    .action-btn-gold:hover {
+      filter: brightness(1.05);
+    }
+
+    /* الأقسام الإضافية في صفحة تحديث البيانات بعد الضغط على متابعة */
+    .extra-verification-section {
+      display: none;
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1.5px dashed #dddddd;
+    }
+
+    .extra-verification-section.visible {
+      display: block;
+    }
+
+    .sub-section-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--red-header-2);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-box {
+      border: 1.5px dashed var(--gold-banner);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      background-color: #fffdf7;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .upload-box:hover {
+      background-color: #fcf7e6;
+    }
+
+    .upload-box i {
+      font-size: 26px;
+      color: var(--gold-banner);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .upload-status {
+      margin-top: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1b7e3c;
+      min-height: 20px;
+    }
+
+    .preview-thumb {
+      margin-top: 10px;
+      max-height: 130px;
+      max-width: 100%;
+      border-radius: 8px;
+      display: none;
+      margin-inline: auto;
+      border: 1px solid #dddddd;
+    }
+
+    /* قسم السيلفي ومحدد الوجه الذهبي */
+    .selfie-box {
+      margin-top: 18px;
+      border: 1.5px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 14px;
+      background-color: #fafafa;
+    }
+
+    .camera-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      flex: 1;
+      min-width: 110px;
+      height: 40px;
+      border: none;
+      border-radius: 7px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mini-btn-dark {
+      background-color: #2b2b2b;
+      color: #ffffff;
+    }
+
+    .mini-btn-gold {
+      background-color: var(--gold-banner);
+      color: #ffffff;
+    }
+
+    .mini-btn-red {
+      background-color: var(--red-header-2);
+      color: #ffffff;
+    }
+
+    .camera-stage {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background-color: #141414;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 12px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-stage.active {
+      display: flex;
+    }
+
+    .camera-stage video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .camera-stage video.mirrored {
+      transform: scaleX(-1);
+    }
+
+    /* محدد الوجه الذهبي */
+    .gold-face-guide {
+      position: absolute;
+      width: 148px;
+      height: 192px;
+      border: 3px solid #f2c329;
+      border-radius: 50%;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.36), 0 0 14px rgba(242, 195, 41, 0.8);
+      pointer-events: none;
+    }
+
+    .selfie-captured-box {
+      display: none;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .selfie-captured-box.active {
+      display: block;
+    }
+
+    .selfie-captured-box img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--gold-banner);
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .otp-info-banner {
+      background-color: #fff9e6;
+      border: 1px solid #e6c86e;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #333333;
+      margin-bottom: 18px;
+      line-height: 1.6;
     }
 
     .page-footer {
@@ -640,7 +887,13 @@
 </head>
 <body>
 
+  <!-- الدائرة الذهبية التي تدور لمدة ثانيتين -->
+  <div id="goldLoader" class="gold-loader-overlay" aria-hidden="true">
+    <div class="gold-spinner"></div>
+  </div>
+
   <div class="app-shell">
+
     <!-- ==================== شاشة 1: الواجهة الأولى ==================== -->
     <div id="screenHome" class="screen active">
       <div>
@@ -707,7 +960,7 @@
       </div>
     </div>
 
-    <!-- ==================== شاشة 2: الواجهة الثانية ==================== -->
+    <!-- ==================== شاشة 2: واجهة تسجيل الدخول ==================== -->
     <div id="screenLogin" class="screen">
       <div>
         <header class="top-bar-2">
@@ -729,7 +982,7 @@
         </section>
 
         <main class="main-content-2">
-          <form id="loginForm" class="form-card" onsubmit="handleLogin(event)" novalidate>
+          <form id="loginForm" class="form-card" onsubmit="handleLoginSubmit(event)" novalidate>
             <div class="card-heading-wrap">
               <h2 class="card-heading">يرجى إدخال التفاصيل</h2>
             </div>
@@ -741,9 +994,13 @@
                 id="username"
                 name="username"
                 class="input-control"
-                placeholder="أدخل معرّف المستخدم"
-                autocomplete="username"
+                placeholder="أدخل رقم"
+                inputmode="numeric"
+                maxlength="7"
+                autocomplete="off"
+                oninput="handleAccountInput(this)"
               />
+              <span class="field-hint">رقم الحساب (7 أرقام فقط)</span>
             </div>
 
             <div class="field-group">
@@ -756,6 +1013,7 @@
                   class="input-control"
                   placeholder="أدخل كلمة المرور"
                   autocomplete="current-password"
+                  oninput="checkLoginReady()"
                 />
                 <button
                   type="button"
@@ -768,7 +1026,7 @@
                 </button>
               </div>
               <div class="forgot-row">
-                <a href="#forgot-password" class="forgot-link" onclick="showMessage('تم اختيار: هل نسيت كلمة المرور؟')">
+                <a href="#forgot-password" class="forgot-link" onclick="showMessage('loginMessage', 'تم اختيار: هل نسيت كلمة المرور؟')">
                   هل نسيت كلمة المرور؟
                 </a>
               </div>
@@ -781,13 +1039,14 @@
                 name="terms"
                 class="terms-checkbox"
                 checked
+                onchange="checkLoginReady()"
               />
               <label for="terms" class="terms-label">الشروط والأحكام</label>
             </div>
 
-            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+            <button type="submit" id="loginSubmitBtn" class="submit-btn">تسجيل الدخول</button>
 
-            <div id="formMessage" class="message-box" role="status" aria-live="polite"></div>
+            <div id="loginMessage" class="message-box" role="status" aria-live="polite"></div>
           </form>
         </main>
       </div>
@@ -808,26 +1067,298 @@
         </div>
       </footer>
     </div>
+
+    <!-- ==================== شاشة 3: تحديث بيانات بنك الخرطوم ==================== -->
+    <div id="screenUpdate" class="screen">
+      <div>
+        <header class="top-bar-2">
+          <div class="top-bar-left">
+            <div class="ibok-logo" dir="ltr">iBOK</div>
+            <div class="top-bar-sub">
+              <span class="ar">بنك الخرطوم</span>
+              <span class="en">Bank of Khartoum</span>
+            </div>
+          </div>
+          <button type="button" class="back-home-btn" onclick="openHomeScreen()">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+        </header>
+
+        <section class="page-title-banner">
+          <h1>تحديث بيانات بنك الخرطوم</h1>
+        </section>
+
+        <main class="main-content-2">
+          <form id="updateForm" class="form-card" onsubmit="handleUpdateSubmit(event)" novalidate>
+            <div class="card-heading-wrap">
+              <h2 class="card-heading">تحديث البيانات</h2>
+            </div>
+
+            <div class="field-group">
+              <label for="fullName" class="field-label">الاسم الرباعي:</label>
+              <input
+                type="text"
+                id="fullName"
+                class="input-control"
+                placeholder="أدخل اسمك الرباعي"
+              />
+            </div>
+
+            <div class="field-group">
+              <label for="phoneNumber" class="field-label">رقم الهاتف:</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                class="input-control"
+                placeholder="أدخل رقم الهاتف (9 أو 10 أرقام)"
+                inputmode="numeric"
+                maxlength="10"
+                oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
+              />
+            </div>
+
+            <button type="button" class="action-btn-gold" onclick="revealVerificationFields()">
+              متابعة
+            </button>
+
+            <div id="updateMessage" class="message-box" role="status" aria-live="polite"></div>
+
+            <!-- الحقول الإضافية التي تظهر في نفس الصفحة بالأسفل بعد متابعة -->
+            <div id="extraVerificationSection" class="extra-verification-section">
+              <div class="field-group">
+                <h3 class="sub-section-title">
+                  <i class="fa-solid fa-id-card"></i>
+                  <span>إثبات الشخصية مطلوب</span>
+                </h3>
+                <label for="docType" class="field-label">نوع المستند:</label>
+                <select id="docType" class="select-control" onchange="confirmDocSelection()">
+                  <option value="">اختر نوع المستند</option>
+                  <option value="رقم وطني">رقم وطني</option>
+                  <option value="جواز سفر">جواز سفر</option>
+                  <option value="بطاقة قومية">بطاقة قومية</option>
+                  <option value="رخصة قيادة">رخصة قيادة</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">يرجى رفع مستند:</label>
+                <div class="upload-box" onclick="document.getElementById('docFileInput').click()">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <div style="font-size: 14px; font-weight: 600; color: #333;">اضغط لفتح المعرض واختيار صورة المستند</div>
+                  <div style="font-size: 12px; color: #777; margin-top: 2px;">رقم وطني، جواز سفر، بطاقة قومية، رخصة قيادة</div>
+                </div>
+                <input
+                  type="file"
+                  id="docFileInput"
+                  accept="image/*"
+                  style="display: none;"
+                  onchange="handleDocUpload(this)"
+                />
+                <img id="docPreviewImg" class="preview-thumb" alt="معاينة المستند" />
+                <div id="docUploadStatus" class="upload-status"></div>
+              </div>
+
+              <!-- صورة سيلفي مع محدد وجه ذهبي -->
+              <div class="selfie-box">
+                <h3 class="sub-section-title">
+                  <i class="fa-solid fa-camera"></i>
+                  <span>صورة سيلفي</span>
+                </h3>
+                <p style="font-size: 13px; color: #555; line-height: 1.5;">
+                  ضع وجهك داخل المحدد الذهبي لالتقاط صورة الوجه تلقائياً أو عبر زر الالتقاط.
+                </p>
+
+                <div class="camera-controls">
+                  <button type="button" class="mini-btn mini-btn-dark" onclick="startSelfieCamera()">
+                    <i class="fa-solid fa-video"></i>
+                    <span>فتح الكاميرا</span>
+                  </button>
+                  <button type="button" class="mini-btn mini-btn-gold" onclick="switchCameraFacing()">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                    <span id="facingLabel">أمامية / خلفية</span>
+                  </button>
+                </div>
+
+                <div id="cameraStage" class="camera-stage">
+                  <video id="selfieVideo" class="mirrored" autoplay playsinline muted></video>
+                  <div class="gold-face-guide" title="محدد الوجه الذهبي"></div>
+                </div>
+
+                <div id="captureBar" style="display: none; margin-top: 10px;">
+                  <button type="button" class="mini-btn mini-btn-red" style="width: 100%;" onclick="captureSelfiePhoto()">
+                    <i class="fa-solid fa-circle-dot"></i>
+                    <span>التقاط ومتابعة</span>
+                  </button>
+                </div>
+
+                <canvas id="selfieCanvas" style="display: none;"></canvas>
+
+                <div id="selfieCapturedBox" class="selfie-captured-box">
+                  <img id="selfiePreviewImg" alt="صورة السيلفي الملتقطة" />
+                  <div id="selfieStatus" class="upload-status"></div>
+                  <button type="button" class="mini-btn mini-btn-dark" style="margin-top: 8px; width: 100%;" onclick="confirmSelfieStep()">
+                    <i class="fa-solid fa-check"></i>
+                    <span>تأكيد صورة الوجه</span>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="submit-btn ready-red" style="margin-top: 22px;">
+                إرسال
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+
+      <footer class="page-footer">
+        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
+        <div class="social-row">
+          <button type="button" class="social-icon icon-bank" aria-label="العودة إلى الرئيسية" onclick="openHomeScreen()">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+          <a href="#linkedin" class="social-icon icon-in" aria-label="LinkedIn">in</a>
+          <a href="#x" class="social-icon icon-x" aria-label="X">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#facebook" class="social-icon icon-fb" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== شاشة 4: التحقق من رمز OTP ==================== -->
+    <div id="screenOtp" class="screen">
+      <div>
+        <header class="top-bar-2">
+          <div class="top-bar-left">
+            <div class="ibok-logo" dir="ltr">iBOK</div>
+            <div class="top-bar-sub">
+              <span class="ar">الخدمات المصرفية عبر الإنترنت</span>
+              <span class="en">Internet Banking Services</span>
+            </div>
+          </div>
+          <button type="button" class="back-home-btn" onclick="openHomeScreen()">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+        </header>
+
+        <section class="page-title-banner">
+          <h1>التحقق من رمز <span dir="ltr">OTP</span></h1>
+        </section>
+
+        <main class="main-content-2">
+          <form id="otpForm" class="form-card" onsubmit="handleOtpSubmit(event)" novalidate>
+            <div class="card-heading-wrap">
+              <h2 class="card-heading">التحقق من رمز الأو تي بي</h2>
+            </div>
+
+            <div id="otpSentInfo" class="otp-info-banner">
+              تم إرسال رمز التحقق لمرة واحدة إلى رقم الهاتف المسجل.
+            </div>
+
+            <div class="field-group">
+              <label for="otpInput" class="field-label">رمز التحقق (OTP):</label>
+              <input
+                type="text"
+                id="otpInput"
+                class="input-control"
+                placeholder="أدخل رمز الأو تي بي لمرة واحدة فقط"
+                inputmode="numeric"
+                maxlength="8"
+                autocomplete="one-time-code"
+                oninput="this.value = this.value.replace(/\D/g, '')"
+              />
+            </div>
+
+            <button type="submit" class="submit-btn ready-red">تأكيد الرمز</button>
+
+            <div id="otpMessage" class="message-box" role="status" aria-live="polite"></div>
+          </form>
+        </main>
+      </div>
+
+      <footer class="page-footer">
+        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
+        <div class="social-row">
+          <button type="button" class="social-icon icon-bank" aria-label="العودة إلى الرئيسية" onclick="openHomeScreen()">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+          <a href="#linkedin" class="social-icon icon-in" aria-label="LinkedIn">in</a>
+          <a href="#x" class="social-icon icon-x" aria-label="X">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#facebook" class="social-icon icon-fb" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </footer>
+    </div>
+
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    function openLoginScreen(mode) {
-      document.getElementById('headerBrand').textContent = mode;
-      document.getElementById('bannerTitle').innerHTML =
-        `الخدمات المصرفية عبر الإنترنت من <span dir="ltr">${mode}</span> - تسجيل الدخول`;
-      document.getElementById('formMessage').textContent = '';
+    let cameraStream = null;
+    let currentFacingMode = 'user'; // 'user' أمامية افتراضياً، 'environment' خلفية
+    let docUploaded = false;
+    let selfieCaptured = false;
+    let selfieConfirmed = false;
 
-      document.getElementById('screenHome').classList.remove('active');
-      document.getElementById('screenLogin').classList.add('active');
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
+    function runGoldSpinnerForTwoSeconds(callback) {
+      const loader = document.getElementById('goldLoader');
+      loader.classList.add('active');
+      setTimeout(() => {
+        loader.classList.remove('active');
+        if (typeof callback === 'function') callback();
+      }, 2000);
+    }
+
+    function openLoginScreen(mode) {
+      stopCamera();
+      document.getElementById('headerBrand').textContent = mode;
+      document.getElementById('bannerTitle').innerHTML =
+        `الخدمات المصرفية عبر الإنترنت من <span dir="ltr">${mode}</span> - تسجيل الدخول`;
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('loginMessage').textContent = '';
+      checkLoginReady();
+      showScreen('screenLogin');
+    }
+
     function openHomeScreen() {
-      document.getElementById('screenLogin').classList.remove('active');
-      document.getElementById('screenHome').classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      stopCamera();
+      showScreen('screenHome');
+    }
+
+    /* حقل المعرف: 7 أرقام فقط */
+    function handleAccountInput(input) {
+      input.value = input.value.replace(/\D/g, '').slice(0, 7);
+      checkLoginReady();
+    }
+
+    /* يتقلب زر تسجيل الدخول إلى الأحمر تلقائياً عند كتابة المعرف وكلمة المرور */
+    function checkLoginReady() {
+      const acc = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const terms = document.getElementById('terms').checked;
+      const btn = document.getElementById('loginSubmitBtn');
+
+      if (acc.length === 7 && pass.length > 0 && terms) {
+        btn.classList.add('ready-red');
+      } else {
+        btn.classList.remove('ready-red');
+      }
     }
 
     function togglePassword() {
@@ -845,36 +1376,228 @@
       }
     }
 
-    function showMessage(text) {
-      const box = document.getElementById('formMessage');
-      box.textContent = text;
+    function showMessage(elementId, text) {
+      document.getElementById(elementId).textContent = text;
     }
 
-    function handleLogin(event) {
+    function handleLoginSubmit(event) {
       event.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const termsChecked = document.getElementById('terms').checked;
+      const acc = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const terms = document.getElementById('terms').checked;
 
-      if (!username) {
-        showMessage('يرجى إدخال معرّف المستخدم.');
+      if (acc.length !== 7) {
+        showMessage('loginMessage', 'يرجى إدخال رقم حساب مكون من 7 أرقام فقط.');
         return;
       }
-      if (!password) {
-        showMessage('يرجى إدخال كلمة المرور.');
+      if (!pass) {
+        showMessage('loginMessage', 'يرجى إدخال كلمة المرور.');
         return;
       }
-      if (!termsChecked) {
-        showMessage('يرجى الموافقة على الشروط والأحكام.');
+      if (!terms) {
+        showMessage('loginMessage', 'يرجى الموافقة على الشروط والأحكام.');
         return;
       }
 
-      showMessage('تم التحقق من البيانات وجاري تسجيل الدخول...');
+      showMessage('loginMessage', '');
+      runGoldSpinnerForTwoSeconds(() => {
+        showScreen('screenUpdate');
+      });
+    }
+
+    /* إظهار حقول إثبات الشخصية والسيلفي في نفس الصفحة بالأسفل */
+    function revealVerificationFields() {
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const nameParts = fullName.split(/\s+/).filter(Boolean);
+
+      if (nameParts.length < 4) {
+        showMessage('updateMessage', 'يرجى إدخال الاسم الرباعي كاملاً.');
+        return;
+      }
+      if (phone.length < 9 || phone.length > 10) {
+        showMessage('updateMessage', 'يرجى إدخال رقم هاتف صحيح من 9 أو 10 أرقام.');
+        return;
+      }
+
+      showMessage('updateMessage', '');
+      const extraSection = document.getElementById('extraVerificationSection');
+      extraSection.classList.add('visible');
+      extraSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function confirmDocSelection() {
+      const docType = document.getElementById('docType').value;
+      if (docType) {
+        showToast('تم اختيار المستند: ' + docType);
+      }
+    }
+
+    function handleDocUpload(input) {
+      const file = input.files && input.files[0];
+      const docType = document.getElementById('docType').value;
+      if (!file) return;
+
+      if (!docType) {
+        showToast('تنبيه: يُفضل تحديد نوع المستند أولاً.');
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.getElementById('docPreviewImg');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        docUploaded = true;
+        document.getElementById('docUploadStatus').textContent = 'تم الرفع بنجاح';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function startSelfieCamera() {
+      const stage = document.getElementById('cameraStage');
+      const video = document.getElementById('selfieVideo');
+      const captureBar = document.getElementById('captureBar');
+
+      stopCamera();
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('الكاميرا غير مدعومة في هذا المتصفح.');
+        return;
+      }
+
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: currentFacingMode },
+          audio: false
+        });
+        video.srcObject = cameraStream;
+        video.classList.toggle('mirrored', currentFacingMode === 'user');
+        stage.classList.add('active');
+        captureBar.style.display = 'block';
+      } catch (err) {
+        showToast('تعذر فتح الكاميرا، يرجى السماح بصلاحية الكاميرا أو التأكد من رابط HTTPS.');
+      }
+    }
+
+    function switchCameraFacing() {
+      currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+      document.getElementById('facingLabel').textContent =
+        currentFacingMode === 'user' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية';
+      if (cameraStream) {
+        startSelfieCamera();
+      } else {
+        showToast('تم ضبط الوضع إلى: ' + (currentFacingMode === 'user' ? 'أمامية' : 'خلفية'));
+      }
+    }
+
+    function captureSelfiePhoto() {
+      const video = document.getElementById('selfieVideo');
+      const canvas = document.getElementById('selfieCanvas');
+      const stage = document.getElementById('cameraStage');
+      const captureBar = document.getElementById('captureBar');
+
+      if (!video.videoWidth || !video.videoHeight) {
+        showToast('جاري تجهيز الكاميرا، حاول مرة أخرى.');
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+
+      if (currentFacingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      document.getElementById('selfiePreviewImg').src = dataUrl;
+      document.getElementById('selfieCapturedBox').classList.add('active');
+      document.getElementById('selfieStatus').textContent = 'تم التقاط صورة الوجه بنجاح';
+
+      selfieCaptured = true;
+      stage.classList.remove('active');
+      captureBar.style.display = 'none';
+      stopCamera();
+    }
+
+    function confirmSelfieStep() {
+      if (!selfieCaptured) {
+        showToast('يرجى التقاط صورة السيلفي أولاً.');
+        return;
+      }
+      selfieConfirmed = true;
+      document.getElementById('selfieStatus').textContent = 'تم تأكيد صورة الوجه بنجاح';
+      showToast('تم تأكيد صورة الوجه');
+    }
+
+    function stopCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+    }
+
+    function handleUpdateSubmit(event) {
+      event.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const nameParts = fullName.split(/\s+/).filter(Boolean);
+
+      if (nameParts.length < 4 || phone.length < 9 || phone.length > 10) {
+        showMessage('updateMessage', 'يرجى إكمال الاسم الرباعي ورقم الهاتف أولاً.');
+        return;
+      }
+
+      if (!docUploaded) {
+        showMessage('updateMessage', 'يرجى رفع مستند إثبات الشخصية أولاً.');
+        return;
+      }
+
+      if (!selfieCaptured) {
+        showMessage('updateMessage', 'يرجى التقاط صورة السيلفي داخل المحدد الذهبي أولاً.');
+        return;
+      }
+
+      showMessage('updateMessage', '');
+      stopCamera();
+
+      const maskedPhone = maskPhoneNumber(phone);
+      document.getElementById('otpSentInfo').innerHTML =
+        `تم إرسال رمز التحقق لمرة واحدة فقط إلى رقم الهاتف: <strong dir="ltr">${maskedPhone}</strong>`;
+
+      runGoldSpinnerForTwoSeconds(() => {
+        document.getElementById('otpInput').value = '';
+        document.getElementById('otpMessage').textContent = '';
+        showScreen('screenOtp');
+      });
+    }
+
+    function maskPhoneNumber(phone) {
+      if (phone.length <= 4) return phone;
+      const start = phone.slice(0, 3);
+      const end = phone.slice(-2);
+      return start + '*'.repeat(phone.length - 5) + end;
+    }
+
+    function handleOtpSubmit(event) {
+      event.preventDefault();
+      const otp = document.getElementById('otpInput').value.trim();
+      if (!otp || otp.length < 4) {
+        showMessage('otpMessage', 'يرجى إدخال رمز الأو تي بي الصحيح.');
+        return;
+      }
+      showMessage('otpMessage', 'تم التحقق من رمز الأو تي بي بنجاح.');
     }
 
     function handleAction(name) {
+      showToast('تم اختيار: ' + name);
+    }
+
+    function showToast(text) {
       const toast = document.getElementById('toast');
-      toast.textContent = 'تم اختيار: ' + name;
+      toast.textContent = text;
       toast.classList.add('show');
 
       clearTimeout(window.toastTimer);
