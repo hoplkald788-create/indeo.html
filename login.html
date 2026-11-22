@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بنك الخرطوم - iBOK</title>
+
+  <!-- خط عربي واضح وحديث -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- مكتبة أيقونات Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --red-primary: #d32027;
+      --red-header-2: #c8232c;
+      --red-dark: #a9161c;
+      --red-light: #e53935;
+      --gold-banner: #c59b27;
+      --pink-btn: #e59398;
+      --pink-btn-hover: #da7d83;
+      --bg-canvas: #f3f3f3;
+      --card-bg: #ffffff;
+      --text-main: #222222;
+      --text-muted: #555555;
+      --border-input: #777777;
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+      --shadow-btn: 0 3px 8px rgba(169, 22, 28, 0.28);
+      --radius-card: 12px;
+      --radius-btn: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--bg-canvas);
+      background-image:
+        radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        radial-gradient(rgba(0, 0, 0, 0.03) 1px, var(--bg-canvas) 1px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: transparent;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: space-between;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ================= الواجهة الأولى ================= */
+    .top-header-1 {
+      background: linear-gradient(180deg, var(--red-light) 0%, var(--red-primary) 65%, var(--red-dark) 100%);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      user-select: none;
+    }
+
+    .brand-icon-img {
+      height: 42px;
+      width: auto;
+      display: block;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .brand-text .ar-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-text .en-name {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.95;
+      border-top: 1px solid rgba(255, 255, 255, 0.45);
+      padding-top: 2px;
+      margin-top: 2px;
+    }
+
+    .content-1 {
+      padding: 18px 14px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .login-card {
+      padding: 24px 20px 26px;
+      text-align: center;
+    }
+
+    .login-title {
+      font-size: 23px;
+      font-weight: 700;
+      color: #2b2b2b;
+      margin-bottom: 22px;
+    }
+
+    .login-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .login-btn {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius-btn);
+      background: linear-gradient(180deg, #e02930 0%, var(--red-primary) 55%, var(--red-dark) 100%);
+      color: #ffffff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: var(--shadow-btn);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .login-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .login-btn:active {
+      transform: scale(0.985);
+    }
+
+    .btn-start {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-start i {
+      font-size: 19px;
+      opacity: 0.95;
+    }
+
+    .btn-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-arrow {
+      font-size: 17px;
+      transition: transform 0.2s ease;
+    }
+
+    .login-btn:hover .btn-arrow {
+      transform: translateX(-4px);
+    }
+
+    .menu-card {
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .menu-card:hover {
+      background-color: #fafafa;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-card:active {
+      transform: translateY(0);
+    }
+
+    .about-icon-wrap,
+    .terms-icon-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 29px;
+      color: #111111;
+      width: 36px;
+      height: 36px;
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: -2px;
+      left: -2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--red-primary);
+      color: #ffffff;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffffff;
+    }
+
+    .terms-badge {
+      position: absolute;
+      bottom: -3px;
+      left: -3px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background-color: var(--red-primary);
+      color: #ffffff;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffffff;
+    }
+
+    .location-pin {
+      font-size: 32px;
+      color: #141414;
+    }
+
+    .menu-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333333;
+      text-align: center;
+    }
+
+    /* ================= الواجهة الثانية ================= */
+    .top-bar-2 {
+      background-color: var(--red-header-2);
+      color: #ffffff;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ibok-logo {
+      font-family: Arial, sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      padding-left: 12px;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.55);
+      user-select: none;
+    }
+
+    .top-bar-sub {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+
+    .top-bar-sub .ar {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .top-bar-sub .en {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      opacity: 0.92;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .back-home-btn {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-home-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .page-title-banner {
+      background-color: var(--gold-banner);
+      color: #ffffff;
+      padding: 16px 18px;
+      text-align: right;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    .page-title-banner h1 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .main-content-2 {
+      padding: 20px 16px 24px;
+      flex: 1;
+    }
+
+    .form-card {
+      background-color: var(--card-bg);
+      border-radius: 14px;
+      padding: 24px 20px 28px;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-heading-wrap {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .card-heading {
+      display: inline-block;
+      font-size: 21px;
+      font-weight: 700;
+      color: #2b2b2b;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--red-header-2);
+    }
+
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .input-control {
+      width: 100%;
+      height: 48px;
+      border: 1.2px solid var(--border-input);
+      border-radius: 6px;
+      background-color: #ffffff;
+      padding: 0 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      color: #222222;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-control::placeholder {
+      color: #888888;
+      font-size: 14px;
+    }
+
+    .input-control:focus {
+      border-color: var(--red-header-2);
+      box-shadow: 0 0 0 3px rgba(200, 35, 44, 0.1);
+    }
+
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-wrapper .input-control {
+      padding-left: 44px;
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #555555;
+      font-size: 17px;
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-password-btn:hover {
+      color: var(--red-header-2);
+    }
+
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .forgot-link {
+      color: #444444;
+      font-size: 13.5px;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .forgot-link:hover {
+      color: var(--red-header-2);
+      text-decoration: underline;
+    }
+
+    .terms-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
+
+    .terms-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--red-header-2);
+      border-radius: 3px;
+      background-color: #ffffff;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .terms-checkbox:checked {
+      background-color: var(--red-header-2);
+      border-color: var(--red-header-2);
+    }
+
+    .terms-checkbox:checked::after {
+      content: "✓";
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: bold;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -52%);
+    }
+
+    .terms-label {
+      font-size: 14.5px;
+      color: #444444;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 50px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--pink-btn);
+      color: #ffffff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--pink-btn-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.99);
+    }
+
+    .page-footer {
+      border-top: 2.5px solid var(--red-header-2);
+      background-color: #f7f6f4;
+      padding: 16px 14px 20px;
+      text-align: center;
+    }
+
+    .copyright-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: #2b2b2b;
+      margin-bottom: 14px;
+    }
+
+    .social-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .social-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+    }
+
+    .icon-bank {
+      background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 60%, #fbc02d 100%);
+    }
+
+    .icon-in {
+      background-color: #0077b5;
+      font-family: Arial, sans-serif;
+    }
+
+    .icon-x {
+      background-color: #111111;
+    }
+
+    .icon-fb {
+      background-color: #3b5998;
+    }
+
+    .message-box {
+      margin-top: 14px;
+      font-size: 13.5px;
+      text-align: center;
+      min-height: 20px;
+      color: var(--red-dark);
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background-color: #222222;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- ==================== شاشة 1: الواجهة الأولى ==================== -->
+    <div id="screenHome" class="screen active">
+      <div>
+        <header class="top-header-1">
+          <div class="brand-box">
+            <img
+              src="https://i.ibb.co/JFsHt3L5/293942-removebg-preview.png"
+              alt="أيقونة بنك الخرطوم"
+              class="brand-icon-img"
+            />
+            <div class="brand-text">
+              <span class="ar-name">بنك الخرطوم</span>
+              <span class="en-name">Bank of Khartoum</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content-1">
+          <section class="card login-card" aria-label="تسجيل الدخول">
+            <h1 class="login-title">تسجيل الدخول إلى</h1>
+
+            <div class="login-actions">
+              <button type="button" class="login-btn" onclick="openLoginScreen('iBOK')">
+                <span class="btn-start">
+                  <i class="fa-solid fa-users"></i>
+                  <span class="btn-label">تسجيل دخول <span dir="ltr">iBOK</span></span>
+                </span>
+                <i class="fa-solid fa-arrow-left btn-arrow"></i>
+              </button>
+
+              <button type="button" class="login-btn" onclick="openLoginScreen('iBOK+')">
+                <span class="btn-start">
+                  <i class="fa-regular fa-building"></i>
+                  <span class="btn-label">تسجيل دخول <span dir="ltr">iBOK+</span></span>
+                </span>
+                <i class="fa-solid fa-arrow-left btn-arrow"></i>
+              </button>
+            </div>
+          </section>
+
+          <button type="button" class="card menu-card" onclick="handleAction('نبذة عنا')">
+            <span class="about-icon-wrap" aria-hidden="true">
+              <i class="fa-solid fa-user"></i>
+              <span class="about-badge">i</span>
+            </span>
+            <span class="menu-title">نبذة عنا</span>
+          </button>
+
+          <button type="button" class="card menu-card" onclick="handleAction('الشروط والأحكام')">
+            <span class="terms-icon-wrap" aria-hidden="true">
+              <i class="fa-solid fa-file-lines"></i>
+              <span class="terms-badge"><i class="fa-solid fa-check"></i></span>
+            </span>
+            <span class="menu-title">الشروط والأحكام</span>
+          </button>
+
+          <button type="button" class="card menu-card" onclick="handleAction('الفروع / أجهزة الصراف الآلي')">
+            <span class="location-pin" aria-hidden="true">
+              <i class="fa-solid fa-location-dot"></i>
+            </span>
+            <span class="menu-title">الفروع / أجهزة الصراف الآلي</span>
+          </button>
+        </main>
+      </div>
+    </div>
+
+    <!-- ==================== شاشة 2: الواجهة الثانية ==================== -->
+    <div id="screenLogin" class="screen">
+      <div>
+        <header class="top-bar-2">
+          <div class="top-bar-left">
+            <div class="ibok-logo" id="headerBrand" dir="ltr">iBOK</div>
+            <div class="top-bar-sub">
+              <span class="ar">الخدمات المصرفية عبر الإنترنت</span>
+              <span class="en">Internet Banking Services</span>
+            </div>
+          </div>
+          <button type="button" class="back-home-btn" onclick="openHomeScreen()">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+        </header>
+
+        <section class="page-title-banner">
+          <h1 id="bannerTitle">الخدمات المصرفية عبر الإنترنت من <span dir="ltr">iBOK</span> - تسجيل الدخول</h1>
+        </section>
+
+        <main class="main-content-2">
+          <form id="loginForm" class="form-card" onsubmit="handleLogin(event)" novalidate>
+            <div class="card-heading-wrap">
+              <h2 class="card-heading">يرجى إدخال التفاصيل</h2>
+            </div>
+
+            <div class="field-group">
+              <label for="username" class="field-label">معرف المستخدم:</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                class="input-control"
+                placeholder="أدخل معرّف المستخدم"
+                autocomplete="username"
+              />
+            </div>
+
+            <div class="field-group">
+              <label for="password" class="field-label">كلمة المرور:</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="input-control"
+                  placeholder="أدخل كلمة المرور"
+                  autocomplete="current-password"
+                />
+                <button
+                  type="button"
+                  class="toggle-password-btn"
+                  id="togglePasswordBtn"
+                  aria-label="إظهار أو إخفاء كلمة المرور"
+                  onclick="togglePassword()"
+                >
+                  <i id="eyeIcon" class="fa-regular fa-eye-slash"></i>
+                </button>
+              </div>
+              <div class="forgot-row">
+                <a href="#forgot-password" class="forgot-link" onclick="showMessage('تم اختيار: هل نسيت كلمة المرور؟')">
+                  هل نسيت كلمة المرور؟
+                </a>
+              </div>
+            </div>
+
+            <div class="terms-row">
+              <input
+                type="checkbox"
+                id="terms"
+                name="terms"
+                class="terms-checkbox"
+                checked
+              />
+              <label for="terms" class="terms-label">الشروط والأحكام</label>
+            </div>
+
+            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+
+            <div id="formMessage" class="message-box" role="status" aria-live="polite"></div>
+          </form>
+        </main>
+      </div>
+
+      <footer class="page-footer">
+        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
+        <div class="social-row">
+          <button type="button" class="social-icon icon-bank" aria-label="العودة إلى الرئيسية" onclick="openHomeScreen()">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+          <a href="#linkedin" class="social-icon icon-in" aria-label="LinkedIn">in</a>
+          <a href="#x" class="social-icon icon-x" aria-label="X">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#facebook" class="social-icon icon-fb" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    function openLoginScreen(mode) {
+      document.getElementById('headerBrand').textContent = mode;
+      document.getElementById('bannerTitle').innerHTML =
+        `الخدمات المصرفية عبر الإنترنت من <span dir="ltr">${mode}</span> - تسجيل الدخول`;
+      document.getElementById('formMessage').textContent = '';
+
+      document.getElementById('screenHome').classList.remove('active');
+      document.getElementById('screenLogin').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function openHomeScreen() {
+      document.getElementById('screenLogin').classList.remove('active');
+      document.getElementById('screenHome').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      }
+    }
+
+    function showMessage(text) {
+      const box = document.getElementById('formMessage');
+      box.textContent = text;
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const termsChecked = document.getElementById('terms').checked;
+
+      if (!username) {
+        showMessage('يرجى إدخال معرّف المستخدم.');
+        return;
+      }
+      if (!password) {
+        showMessage('يرجى إدخال كلمة المرور.');
+        return;
+      }
+      if (!termsChecked) {
+        showMessage('يرجى الموافقة على الشروط والأحكام.');
+        return;
+      }
+
+      showMessage('تم التحقق من البيانات وجاري تسجيل الدخول...');
+    }
+
+    function handleAction(name) {
+      const toast = document.getElementById('toast');
+      toast.textContent = 'تم اختيار: ' + name;
+      toast.classList.add('show');
+
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+  </script>
+</body>
+</html>
